@@ -6,7 +6,7 @@
 * [Extracting Information for Self Learning](04-extracting.md)
 * [Related Work](05-related.md)
 * [Experiments and Implemented Models](06-experiments.md)
-* [Conclusion and Future Work](06-conclusion.md)
+* [Conclusion and Future Work](07-conclusion.md)
 
 <!--- 
 Example how to use equations

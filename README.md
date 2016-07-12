@@ -13,7 +13,10 @@ TODO - sharing options
 
 ## Formats
 
-TODO how to maintain bibliography - bibtex entries?
+todo
+
+### TODOs
+TODO run locally TODO how to maintain bibliography - bibtex entries? 
 TODO how to export it to pdf, epub (see docs)
 TODO How to apply latex template.
 
