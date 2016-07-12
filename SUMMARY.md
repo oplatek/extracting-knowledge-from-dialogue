@@ -1,7 +1,7 @@
 # Summary
 
-* [Introduction](01intro.md)
-* [Current State of the Art in Self-learning Agents](02current-self.md)
+* [Introduction](01-intro.md)
+* [Current State of the Art in Self-learning Agents](02-current-self.md)
 * [Current State of the Art in End-to-end Conversational Systems](03-current-e2end.md)
 * [Extracting Information for Self Learning](04-extracting.md)
 * [Related Work](05-related.md)

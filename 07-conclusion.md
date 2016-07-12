@@ -5,3 +5,7 @@
 - What have I done?
 - What I should do next?
     - How to turn it into papers?
+
+
+<!-- plugin https://www.npmjs.com/package/gitbook-plugin-bibtex-citation -->
+{% references %} {% endreferences %}
