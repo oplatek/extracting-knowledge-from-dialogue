@@ -15,3 +15,9 @@ TODO - sharing options
 
 TODO how to export it to pdf, epub (see docs)
 TODO How to apply latex template.
+
+
+Inspiration
+===========
+- [Mirek Vodolan draft](https://www.overleaf.com/5351566ypdgnm#/18184097/)
+- [Zdenek Zabokrtsky's list of defended thesis proposals and thesis](http://ufal.mff.cuni.cz/~zabokrtsky/pgs/kalendar.html)
