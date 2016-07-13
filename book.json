@@ -1,3 +1,21 @@
 {
-    "plugins": ["mathjax", "bibtex-citation"]
+    "gitbook": "3.2.0",
+    "structure": {
+        "summary": "SUMMARY.md"
+    },
+    "plugins": ["bibtex", "mathjax-full"],
+    "unused-plugins": ["mathjax-full", "mathjax", "mathjax-update"],
+	"pluginsConfig": {
+		"bibtex": {
+			"bibliography": "literature.bib"
+		},
+		"mathjax": {
+			"forceSVG": true
+		}
+	},
+	"links": {
+			"sidebar": {
+				"GitHub": "TODO-export"
+			}
+		}
 }
