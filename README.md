@@ -12,14 +12,10 @@ See the proposal [online](https://oplatek.gitbooks.io/thesis-proposal/content/).
 - Technical problems with formatting and displaying the book file on [github tracker](https://github.com/oplatek/extracting-knowledge-from-dialogue/issues)
 
 ## Formats
-
-todo
-
-### TODOs
-TODO run locally TODO how to maintain bibliography - bibtex entries? 
-TODO how to export it to pdf, epub (see docs)
-TODO How to apply latex template.
-
+- [Read online](https://www.gitbook.com/read/book/oplatek/thesis-proposal)
+- [Read pdf](https://www.gitbook.com/download/pdf/book/oplatek/thesis-proposal)
+- [Read epub](https://www.gitbook.com/download/epub/book/oplatek/thesis-proposal)
+- [Read mobi](https://www.gitbook.com/download/mobi/book/oplatek/thesis-proposal)
 
 ### Inspiration
 - [Mirek Vodolan draft](https://www.overleaf.com/5351566ypdgnm#/18184097/)
@@ -28,14 +24,15 @@ TODO How to apply latex template.
 Gitbook reference
 - [Using Gitbook to document an open source project](https://medium.com/@gpbl/how-to-use-gitbook-to-publish-docs-for-your-open-source-npm-packages-465dd8d5bfba#.h5ufyl7w://medium.com/@gpbl/how-to-use-gitbook-to-publish-docs-for-your-open-source-npm-packages-465dd8d5bfba#.h5ufyl7wu)
 
-### How to work with gitbook 
+### How to work with Gitbook 
+
+- Installation
 ```
 npm install gitbook-cli@2.3.0
 npm run docs:prepare  # install plugins
 npm run docs:watch  # start the local webserver
 echo "Open http://localhost:4000"
 ```
-
 - Inspiration for Gitbook formatting:
     - https://github.com/kriskowal/gtor, https://www.gitbook.com/book/kriskowal/gtor/details
     - https://github.com/walkerrandolphsmith/math-book
@@ -43,6 +40,7 @@ echo "Open http://localhost:4000"
         - https://github.com/lightscalar/neural-net/blob/master/chapters/neurons.md
         - https://lightscalar.gitbooks.io/neural-net/content/chapters/neurons.html
 - Todo upgrade to better [bibtex citations plugin](https://plugins.gitbook.com/browse?q=bibtex)
+- TODO How to apply latex template.
 - TODO how to number equations, images and how to reference them?
 	- https://github.com/GitbookIO/gitbook/issues/1203
 - I have setup [Github integration](https://github.com/oplatek/extracting-knowledge-from-dialogue/settings/hooks)
