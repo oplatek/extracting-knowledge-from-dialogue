@@ -44,3 +44,7 @@ echo "Open http://localhost:4000"
 - TODO how to number equations, images and how to reference them?
 	- https://github.com/GitbookIO/gitbook/issues/1203
 - I have setup [Github integration](https://github.com/oplatek/extracting-knowledge-from-dialogue/settings/hooks)
+
+### TODOS
+- fill urls to bibtex entries so one can easily browse the articles
+
