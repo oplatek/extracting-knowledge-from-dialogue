@@ -8,8 +8,8 @@ See the proposal [online](https://oplatek.gitbooks.io/thesis-proposal/content/).
 
 ## Comments
 
-Please, comment TODO.
-TODO - sharing options
+- Comment regarding the content of the book file on [gitbook discussions](https://www.gitbook.com/book/oplatek/thesis-proposal/discussions)
+- Technical problems with formatting and displaying the book file on [github tracker](https://github.com/oplatek/extracting-knowledge-from-dialogue/issues)
 
 ## Formats
 
@@ -45,3 +45,4 @@ echo "Open http://localhost:4000"
 - Todo upgrade to better [bibtex citations plugin](https://plugins.gitbook.com/browse?q=bibtex)
 - TODO how to number equations, images and how to reference them?
 	- https://github.com/GitbookIO/gitbook/issues/1203
+- I have setup [Github integration](https://github.com/oplatek/extracting-knowledge-from-dialogue/settings/hooks)
