@@ -43,3 +43,5 @@ echo "Open http://localhost:4000"
         - https://github.com/lightscalar/neural-net/blob/master/chapters/neurons.md
         - https://lightscalar.gitbooks.io/neural-net/content/chapters/neurons.html
 - Todo upgrade to better [bibtex citations plugin](https://plugins.gitbook.com/browse?q=bibtex)
+- TODO how to number equations, images and how to reference them?
+	- https://github.com/GitbookIO/gitbook/issues/1203

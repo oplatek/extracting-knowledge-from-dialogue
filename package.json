@@ -2,7 +2,7 @@
     "repository": "https://git.gitbook.com/oplatek/thesis-proposal",
     "license": "Artistic-2.0",
     "scripts": {
-       "docs:prepare": "gitbook install ./",
-       "docs:watch": "gitbook serve"
+       "docs:prepare": "./node_modules/.bin/gitbook install ./",
+       "docs:watch": "./node_modules/.bin/gitbook serve"
     }
 }
