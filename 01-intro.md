@@ -1,5 +1,15 @@
 # Introduction 
 
+Building a conversation agent is a demanding process which is typically simplified by narrowing the domain of conversation
+and fixing the knowledge about which is the agent able to communicate.
+The research so far focused on optimizing the agent either online using very weak feedback or using supervised learning and annotation.
+This work focuses on designing the conversational agents which will be able to:
+- collect explicit annotation interactively during the dialogue
+- enhancing the knowledge base of a system by new facts
+- learn better reward signals from conversations.
+By implementing these properties we aim at reducing the amount of data and annotation needed for developing a conversational agent.
+We would also like to explore how to improve the agent over time.
+
 - Conversational agents became common for very simplistic domains
     - Past research focused on improving conversational agents on simplistic domains e.g., restaurant domain {{"young2010hidden"|cite}} or phone book {{"williams2016end"|cite}}
     - Early adopters from industry created tools for developers to easy up building narrow domain conversational agents
