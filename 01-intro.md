@@ -46,5 +46,10 @@ We would also like to explore how to improve the agent over time.
 - Out-dating optimal parameters, obsolete knowledge-bases - need for learning
 - People care and want to teach the agent - the agent should be teachable - TODO verify in literature
 
+- write about evaluation metrics 
+    - accuracy on templates
+    - accuracy on semantics
+    - How ti relates to "On the Evaluation of Dialogue Systems with Next Utterance Classification Ryan Lowe1, Iulian V. Serban2, Mike Noseworthy1, Laurent Charlin3∗, Joelle Pineau1"
+
 <!-- TODO Include formulations from Self-awareness git@bitbucket.org:oplatek/phd-mini-conference.git -->
 
