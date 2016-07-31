@@ -1,0 +1,74 @@
+\documentclass[11pt]{article}
+\usepackage{acl2016}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{times}
+\usepackage{url}
+\usepackage{latexsym}
+
+\usepackage{todonotes}
+\usepackage{newclude}
+\usepackage{float}
+
+\def\MV#1{\textcolor{red}{TODO: \textit{#1}}}
+\def\subsubsubsection#1{\subsubsection*{#1}}
+
+\aclfinalcopy% Uncomment this line for the final submission
+%\def\aclpaperid{***} %  Enter the acl Paper ID here
+
+
+\newcommand\BibTeX{B{\sc ib}\TeX}
+
+\title{Extracting Knowledge from Dialogue}
+
+\author{Ondřej Plátek \\
+  Charles University in Prague, Faculty of Mathematics and Physics \\
+  Institute of Formal and Applied Linguistics \\
+  Malostranské náměstí 25, 11800 Praha 1, Czech Republic\\
+  {\tt oplatek@ufal.mff.cuni.cz}\\}
+
+\date{}
+
+
+
+\begin{document}
+\maketitle
+\begin{abstract}
+Building a conversation agent is a demanding process which is typically simplified by narrowing the domain of conversation and fixing the knowledge about which is the agent able to communicate.
+The research so far focused on optimizing the agent either online using very weak feedback or using supervised learning and annotation.
+This work focuses on designing the conversational agents which will be able to:
+\begin{itemize}
+    \item collect explicit annotation interactively during the dialogue,
+    \item enhancing the knowledge base of a system by new facts,
+    \item learn better reward signals from conversations.
+\end{itemize}
+By implementing these properties we aim at reducing the amount of data and annotation needed for developing a conversational agent.
+We would also like to explore how to improve the agent over time.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:introduction}
+
+I need to set it up with relevant work e.g.~\cite{young2010hidden}.
+
+First, we discuss approaches to XY in Section~\ref{sec:}. 
+Second, ongoing work on approach XY is described  in~Section. 
+Third, we propose future work in Section~\ref{sec:}.
+Finally, we discuss importance of our work in the future in Section~\ref{sec:}.
+
+
+
+
+\section{Discussion}
+\label{sec:discussion}
+
+\section*{Acknowledgments}
+This research was partly funded by the Ministry of Education, Youth and Sports of the Czech Republic under the grant agreement LK11221, core research funding, grant GAUK 1915/2015, and also partially supported by SVV project number 260 333. 
+We gratefully acknowledge the support of NVIDIA Corporation with the donation of the Tesla K40c GPU used for this research.
+Computational resources were provided by the CESNET LM2015042 and the CERIT Scientific Cloud LM2015085, provided under the programme ``Projects of Large Research, Development, and Innovations Infrastructures''.
+
+\bibliographystyle{acl2016}
+\bibliography{bibliography}
+
+
+\end{document}
