@@ -1,11 +1,42 @@
 This is BibTeX, Version 0.99d (TeX Live 2015)
 Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: proposal.aux
+Case mismatch error between cite keys Dusek and dusek
+---line 37 of file proposal.aux
+ : \citation{Dusek
+ :                }
+I'm skipping whatever remains of this command
+Case mismatch error between cite keys Dusek and dusek
+---line 39 of file proposal.aux
+ : \citation{Dusek
+ :                }
+I'm skipping whatever remains of this command
+Case mismatch error between cite keys Dusek and dusek
+---line 40 of file proposal.aux
+ : \citation{Dusek
+ :                }
+I'm skipping whatever remains of this command
 The style file: acl2016.bst
 Database file #1: bibliography.bib
+Warning--I didn't find a database entry for "letsgo"
+Warning--I didn't find a database entry for "dsctwilliams"
+Warning--I didn't find a database entry for "dstcwilliams"
+Warning--I didn't find a database entry for "hendersonsecond"
+Warning--I didn't find a database entry for "hendersondthird"
+Warning--I didn't find a database entry for "new_povey"
+Warning--I didn't find a database entry for "new_ms"
+Warning--I didn't find a database entry for "new_google"
+Warning--I didn't find a database entry for "new_vesely"
+Warning--I didn't find a database entry for "todo"
+Warning--I didn't find a database entry for "dusek"
+Warning--I didn't find a database entry for "wen"
+Warning--I didn't find a database entry for "schidhuber/previous"
+Warning--I didn't find a database entry for "Ng1"
+Warning--I didn't find a database entry for "2"
+Warning--I didn't find a database entry for "linear_Ng"
 You've used 1 entry,
             2490 wiz_defined-function locations,
-            560 strings with 4793 characters,
+            577 strings with 4943 characters,
 and the built_in function-call counts, 581 in all, are:
 = -- 55
 > -- 38
@@ -44,3 +75,4 @@ warning$ -- 0
 while$ -- 4
 width$ -- 2
 write$ -- 16
+(There were 3 error messages)

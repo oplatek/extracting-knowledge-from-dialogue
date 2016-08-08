@@ -26,7 +26,7 @@ We would also like to explore how to improve the agent over time.
                 - Ontologies are not balanced
                 - One would need to experiment if example based explanation are more successful than describing an abstracted meaning
                 - Few systems attempts to interactively communicate with user and easy their situation by confirmation of the dialogue state
-                    - Only basic confirms - *I think that you are want A, right?*
+                    - Only basic confirms - *I think that you want A, right?*
     - Interactivity is used almost only for simplifying the current situation for the agent
         - Interactivity often just eliminates an incorrect options among which the agent has to choose
             - If the feedback of the user is rich enough and agent interprets it correctly it should guide the agent to select the best action according the users preferences
