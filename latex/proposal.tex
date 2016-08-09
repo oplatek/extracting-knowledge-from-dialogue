@@ -10,7 +10,17 @@
 \usepackage{newclude}
 \usepackage{float}
 
-\def\op#1{\textcolor{red}{TODO\@ \textit{#1}}}
+% \def\op#1{\textcolor{red}{TODO\@ \textit{#1}}}
+
+\def\op#1{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red]{#1}}
+% \newcommandx{\od}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
+% \newcommandx{\info}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
+% \newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
+% \newcommandx{\thiswillnotshow}[2][1=]{\todo[disable,#1]{#2}}
+% Usage
+% \improvement{This really needs to be improved!\newline\newline What was I thinking?!}
+% \thiswillnotshow{This is hidden since option `disable' is chosen!}
+% \improvement[inline]{The following section needs to be rewritten!}
 
 \aclfinalcopy% Uncomment this line for the final submission
 %\def\aclpaperid{***} %  Enter the acl Paper ID here
@@ -98,7 +108,7 @@ It reduces the task of building text-to-text dialogue system to training a singl
 \end{itemize}
 
 Neural networks dominate the first attempts~\citep{We,Williams,Weston,Dodge} to build conversational end-to-end systems.
-Using neural networks is an obvious choice because different models achieve achieved state-of-the-art results for optimizing traditional components of a dialogue system:
+Using neural networks is an obvious choice because different models achieve state-of-the-art results for optimizing traditional components of a dialogue system:
 \begin{itemize}
     \item language understanding (LU)~\cite{todo} and dialogue state tracking (DST)~cite{williams,henderson,vodolan,platek}
     \item policy optimization for action selection~\cite{todo}
@@ -222,8 +232,35 @@ Such model needs to be trained to match KB actions and its replies but allows fl
 
 \subsubsection*{Future experiments}
 
+\begin{itemize}
+    \item Easy first decoding for dialogue state tracking using reinforce algorithm
+    \item Selecting correct entity from database based on dialogue history using reinforcement learning
+    \item End-to-end system based on selecting an entity from database and answer generation word by word and using templates
+    \item Pretending to be stupid a choosing incorrect action/argument
+		(when we are confident about the right action) 
+			on purpose and select the right alternative at the end
+			and record users reply and dialog continuation
+        \begin{itemize}
+			\item simulating scenarios where we lack of data - we can back up to the original thread
+			\item {\bf error detection}: learn to classify if user is confused (need to prepare separate test \& dev set in advance
+            \item we offer the right answer to finish the recovering phase
+            \item evaluation the wanted action is satisfied? should always be yes
+            \item {\bf error recovery}: learn how to respond better? 
+                \begin{itemize}
+					\item Ask user what should I say
+                    \item challenges: direct vs indirect speech \& should we trust users? 
+                \end{itemize}
+        \end{itemize}
+	\item Data collection with for error recovery
+	\begin{itemize}
+		\item we know how to detect errors
+		\item we need to better learn for users how to recover them
+		\item simple modification of current data collection pipeline
+	\end{itemize}
+    \item should I mention this: one-shot learning clustering in a single conversation?
+	\item 
 
-
+\end{itemize}
 
 \section{Discussion}
 \label{sec:discussion}
