@@ -217,7 +217,7 @@ However, the user typically only suppose that the system executed the correct ac
 As a result if one want to train a dialogue system one need to design objective function and data representations which force the latent action correspond to system replies.
 
 A common approach is to use dialog state tracking for updating the dialogue state represented in discrete form such as dialogue state items (see Figure~\ref{fig:dai_gen}) and a dialogue policy which execute operations on KB and produces plan for NLG what to say which is compatible with KB actions~\cite{Dusek,young2010hidden}.
-Alternative approach in simplistic form in~citep{Wen} where a KB operation was executed or skipped based on the dialogue state but the NLG uses the only the dialogue state and the result of KB operation to generate reply.
+Alternative approach in simplistic form in~\citep{Wen} where a KB operation was executed or skipped based on the dialogue state but the NLG uses the only the dialogue state and the result of KB operation to generate reply.
 We propose to predict directly which KB operation to use from hidden state $h_t$ of neural network and based on the select KB operation's result and the same state $h_t$ predict sequence of words what to reply.
 Such model needs to be trained to match KB actions and its replies but allows flexibility how to communicate about system actions which is goal of our research.
 \todo{describe the model in much detail}
@@ -252,18 +252,34 @@ Such model needs to be trained to match KB actions and its replies but allows fl
                 \end{itemize}
         \end{itemize}
 	\item Data collection with for error recovery
-	\begin{itemize}
-		\item we know how to detect errors
-		\item we need to better learn for users how to recover them
-		\item simple modification of current data collection pipeline
-	\end{itemize}
-    \item should I mention this: one-shot learning clustering in a single conversation?
+		\begin{itemize}
+			\item we know how to detect errors
+			\item we need to better learn for users how to recover them
+			\item simple modification of current data collection pipeline
+		\end{itemize}
+    \item Deploy evaluate system which can augment its own dataset for training
+		\begin{itemize}
+			\item we have two systems
+				\begin{itemize}
+					\item task-oriented policy
+				    \item system which is trained for error recovery for task-oriented policy
+			    \end{itemize}
+			\item evaluate if such system is:
+			    \begin{itemize}
+					\item perceived better than system without error recovery
+					\item if system with error recovery can augment data for both systems. E.g. if labels collected through the recovery phase help for retraining the systems.
+			    \end{itemize}
+		\end{itemize}
+
 	\item 
 
 \end{itemize}
 
 \section{Discussion}
 \label{sec:discussion}
+
+zero shot learning~\cite{vinyals_matching_2016} should help us learn fast from data.
+Similar to~\cite{serban_building_2015}
 
 \todo{What are our expectation which are critical for other experiments? What if they fail?} 
 \todo{Related work}
