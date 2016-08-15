@@ -14,3 +14,8 @@ _book
 *.epub
 *.mobi
 *.pdf
+
+
+proposal.fdb_latexmk
+proposal.fls
+proposal.synctex.gz
