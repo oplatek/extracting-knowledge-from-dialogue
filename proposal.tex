@@ -15,14 +15,19 @@
 % \def\op#1{\textcolor{red}{TODO\@ \textit{#1}}}
 
 \def\op#1{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red]{#1}}
-% \newcommandx{\od}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
-% \newcommandx{\info}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
-% \newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
-% \newcommandx{\thiswillnotshow}[2][1=]{\todo[disable,#1]{#2}}
-% Usage
-% \improvement{This really needs to be improved!\newline\newline What was I thinking?!}
-% \thiswillnotshow{This is hidden since option `disable' is chosen!}
-% \improvement[inline]{The following section needs to be rewritten!}
+
+
+%%%%%% PLEASE USE THIS DECLARATION FOR YOUR COMMENTS %%%%%%%%
+
+% OP - Ondrej Platek inline 
+\def\OP#1{{\color{purple}OP: \it #1}}
+\def\ODdel#1{\bgroup\markoverwith{\textcolor{purple}{\rule[0.5ex]{2pt}{1pt}}}\ULon{#1}}
+
+% OD - Ondrej Dusek
+\definecolor{darkgreen}{rgb}{0.0, 0.5, 0.0}
+\def\OD#1{{\color{darkgreen}OD: \it #1}}
+\def\ODdel#1{\bgroup\markoverwith{\textcolor{darkgreen}{\rule[0.5ex]{2pt}{1pt}}}\ULon{#1}}
+
 
 \aclfinalcopy% Uncomment this line for the final submission
 %\def\aclpaperid{***} %  Enter the acl Paper ID here
@@ -147,7 +152,7 @@ When using RNNs~\cite{gers_learning_2000} in its simplest form for classificatio
 \begin{equation}
     P(y_t| y_1, x_2, y_2, \dot, y_{t-1}, x_t) = P(y_t | s_{t-1}, y_{t-1}, x_t)
 \end{equation}
-is often formulated as \todo{hidden markov model} See equation
+is often formulated as \OP{hidden markov model} See equation
 \begin{equation}
     P(Y|X) = P(y_t | x_1, y_1, x_2, y_2, \dot x_{t-1}, y_{t-1}, x_t)
 \end{equation}
