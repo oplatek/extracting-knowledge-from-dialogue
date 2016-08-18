@@ -173,7 +173,7 @@ Such function is not only useful for evaluating different models but can be dire
 \subsubsection*{Maximum likelihood: current state}\label{sub:maximum_likelihood}
 Training neural networks for dialogue from gold labels using cross entropy for supervised learning brings several challenges
 \begin{itemize}
-    \item The prediction of next decision using the sequence-to-sequence model~\cite{bahdanou,todo} are conditionally independent given the sufficient statistics of the hidden state of the decoding RNN.
+    \item The prediction of the~next decision using the sequence-to-sequence model~\cite{bahdanou,sutskever_sequence_2014} are conditionally independent given the sufficient statistics of the hidden state of the decoding RNN.
     \item Dialogue responses of the system is often ambiguous and multiple options are equally possible.
         On the other hand cross-entropy models the same way uncertainty and ambiguity and allows only one correct gold solution.
         See Equation~\ref{eq:cross} where $p(x)$ is distribution approximated by distribution of samples over training data and updates of the neural networks needs to be perform only as difference between predicted likelihood $-log(q(x))$ and one log one-hot distribution
@@ -192,17 +192,17 @@ On the other hand, using quite noisy feedback from user at the end of dialogues 
 Completely different use of RL was successfully used with supervised cross-entropy pre-training an later optimizing for not differentiable loss function.~\cite{williams2016end}
 On the other, this approach still uses the same labeled data and annotations as used for supervised learning.
 The advantage of this approach is that it is able to naturally capture by the reward functions multiple valid actions.
-Furthermore, multiple weak reward functions can be combined to form much stronger feedback signal~\cite{todo}.
+Furthermore, multiple weak reward functions can be combined to form much stronger feedback signal~\cite{abbeel_apprenticeship_2004}.
 
 
 \subsubsection*{Learning to collect feedback}\label{sub:irl}
 If using the reinforcement or supervised learning it is assumed that the loss function is provided before the training.
-One of key properties of dialogues systems is that their domain changes over time~\cite{todo}, so every predefined loss function becomes obsolete after some time.
+One of key properties of dialogues systems is that their domain changes over time~\cite{yu_evolvable_2016}, so every predefined loss function becomes obsolete after some time.
 In addition, specifying a good loss is notoriously hard since no standard measures for dialogue are widely accepted.
 
 Inverse reinforcement learning (IRL)\footnote{Also known as active reward learning~\cite{su2016active}.} is a task of learning the loss (or reward) function used in RL~\cite{abbeel_apprenticeship_2004}.
-The IRL is ill-posed problem in general~\cite{todo} and is guaranteed to work only for special cases e.g.~\cite{abbeel_apprenticeship_2004}.
-In our experiments (see~Section~\ref{sec:feedback}) we aim to learn feedback from interactive conversation, but we plan to use IRL and similar approaches as reward shaping~\cite{su-todo} only for comparison.
+The IRL is ill-posed problem in general~\cite{choi_inverse_2011} and is guaranteed to work only for special cases e.g.~\cite{abbeel_apprenticeship_2004}.  \todo{Understand~\cite{choi_inverse_2011} better}
+In our experiments (see~Section~\ref{sec:feedback}) we aim to learn feedback from interactive conversation, but we plan to use IRL and similar approaches as reward shaping~\cite{su2016active} only for comparison.
 We describe our approach of collecting annotation in Section~\ref{sec:learn_feedback}.
 
 \section{Collecting Feedback}
@@ -298,7 +298,7 @@ We plan to use for evaluation the dataset collected in work~\cite{platek2016woch
     \usr{Where is of the India house restaurant located?}
     \api{select restaurant.area where name="India house"}
     \sys{The India house is located in the west part of the city.}
-    \caption{}
+    \caption{Dialogue example with latent calls to system's DB.}
     \label{fig:apicall}
 \end{figure}
 
@@ -367,7 +367,7 @@ The repetitiveness may not seem natural for regular users, but mainly it proves 
 We want to use such conversations where the system has reasonable confidence of its action to intentionally slightly change the system reply.
 If we not detect misunderstanding in several cases of such new reply for given context, we will suppose we can include it as new data point. 
 The new data points - conversations - will be added to original dataset.
-We suppose that we want to improve end-to-end trained from conversational data such as described at Section~\ref{sec:todo}.
+We suppose that we want to improve a end-to-end systems trained from conversational data such as described at Section~\ref{sec:e2end}.
 The system is able to produce alternatives for each predicted actions and also their confidence scores.
 Using the scores we may not choose the recommended action by the system, but our active learning algorithm will decide on the alternative.
 We will use coverage and precision of problematic situation described in~\cite{meena_data-driven_2016}
