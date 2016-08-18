@@ -184,7 +184,7 @@ On the other hand, using quite noisy feedback from user at the end of dialogues 
 Completely different use of RL was successfully used with supervised cross-entropy pre-training an later optimizing for not differentiable loss function.~\cite{williams2016end}
 On the other, this approach still uses the same labeled data and annotations as used for supervised learning.
 The advantage of this approach is that it is able to naturally capture by the reward functions multiple valid actions.
-Furthermore, multi weak reward functions can be combined to form much stronger feedback signal.~\cite{todo}
+Furthermore, multiple weak reward functions can be combined to form much stronger feedback signal~\cite{todo}.
 
 
 \subsubsection*{Learning to collect feedback}\label{sub:irl}
@@ -197,27 +197,15 @@ The IRL is ill-posed problem in general~\cite{todo} and is guaranteed to work on
 In our experiments (see~Section~\ref{sec:feedback}) we aim to learn feedback from interactive conversation, but we plan to use IRL and similar approaches as reward shaping~\cite{su-todo} only for comparison.
 We describe our approach of collecting annotation in Section~\ref{sec:learn_feedback}.
 
-\section{Learning to Collect Feedback}
+\section{Collecting Feedback}
 \label{sec:learn_feedback}
-
-\todo{REWRITE THE MOST IMPORTant SECTION after experiments}
-A feedback in statistical models have different form.
-We introduced supervised learning and cross entropy for neural networks in~Section~\ref{sec:loss}.
-Supervised learning expects prepared annotation - labeled training data.
-Reinforcement learning is more general framework for updating parameters of statistical models and also may be used for neural networks~\cite{williams2016end,policy_rec_gradients}.
-In dialogue system it is typically used online when a deployed system collect simple feedback at the end of each dialogue, or more recently the RL is used to fine tuned supervisely trained neural network by optimizing directly the evaluation function~\cite{su}
-Recapitulate in Section we motivated, and state that Learning to collect feedback is ill state problem
-We aim to solve it by factorising the problem into two and switching between them in interactive conversation.
-
-\begin{itemize}
-    \item Use my position paper about self-awareness
-    \item Connect feedback DB calls (latent) and responses make them all explicit.
-        \begin{itemize}
-            \item Prepare first experiment how to make DB calls more explicit
-        \end{itemize}
-    \item 
-    \item 
-\end{itemize}
+Extracting feedback from dialogues is possible in several ways as described earlier: through fixed loss function, through learned loss function or explicitly through annotations.
+The feedback can be stored either explicitly as annotations or in parameters of the model which models the conversations.
+We aim at learning to collect explicit annotations because annotations.
+We focus on collecting explicit feedback because it can be exploited by any model via supervised or reinforcement learning in contrast to storing the feedback in parameters of a statistical model e.g.\ neural networks which notoriously hard to reuse for new architectures~\cite{parameterNNtransfer}.
+We will also attempt to learn the feedback automatically because otherwise non trivial expert work is needed for designing the heuristics to collect the annotations.
+\todo{more details}
+\todo{coevolution,ali,atd}
 
 \section{Experiments}
 \label{sec:experiments}
@@ -228,6 +216,15 @@ The experiments are designed as a proof of concept on narrow domain and scaling 
 Our current focus is to develop an end-to-end task-oriented conversation agent on restaurant domain which is easy to train and provides reasonable baseline.
 We take several steps to achieve this goal:
 First, work~\cite{platek_recurrent_2016} verifies that we are able to train recurrent neural networks for dialogue state tracking and achieve near state-of-the-art easily. 
+We frame the DST as sequence-to-sequence problem and used encoder-decoder (see Figure~\ref{fig:dst_seq2seq}. 
+
+\begin{figure}[htpb]
+    \centering
+    \includegraphics[width=1.0\linewidth]{dst_seq2seq}
+    \caption{DST using encoder decoder RNN model.}
+    \label{fig:dst_seq2seq}
+\end{figure}
+
 Second, a dataset for training end-to-end system~\cite{platek2016wochat} was collected which focus on collecting easy-to-obtained annotations.
 Third, we are still working on training end-to-end system without expensive annotation such as dialogue state labels used in~\cite{wen_networkbased_2016}.
 
@@ -243,12 +240,12 @@ A common approach is to use dialog state tracking for updating the dialogue stat
 Alternative approach in simplistic form in~\cite{wen_networkbased_2016} where a KB operation was executed or skipped based on the dialogue state but the NLG uses the only the dialogue state and the result of KB operation to generate reply.
 We propose to predict directly which KB operation to use from hidden state $h_t$ of neural network and based on the select KB operation's result and the same state $h_t$ predict sequence of words what to reply.
 Such model needs to be trained to match KB actions and its replies but allows flexibility how to communicate about system actions which is goal of our research.
-\todo{describe the model in much detail}
+\todo{describe the model in detail}
 \todo{describe expected results}
 
 \begin{figure}[htpb]
     \centering
-    \includegraphics[width=0.8\linewidth]{todo}
+    \includegraphics[width=1.0\linewidth]{dusek_seq2seq}
     \caption{Dialogue act items tracking and generation. A policy ensures that each access to DB corresponds to NLG plan what to say~\cite{dusek_sequence2sequence_2016}.}
     \label{fig:dai_gen}
 \end{figure}
@@ -322,14 +319,14 @@ In contrast, to~\cite{skantze_error_2007} who focused on ASR errors we focus on 
 First, we propose to use a special reply for out-of-domain user queries which explains users that his query is out-of-domain and presents system's domain.~\cite{platek_self_2015}
 With such strategy for handling out-of-domain queries and the errors when system does not inform about its skills, we see the action selection of another reply as an error for given dialogue history.
 If the misunderstanding is not cause by out-of-domain query the system response may be plainly false for all cases or the user is aware that the system reply might be valid answer, but wants another one.
-For example see Figure~\ref{fig:ambiguity_example}.
-
-\begin{figure}[htpb]
-    \centering
-    \includegraphics[width=0.8\linewidth]{todo}
-    \caption{Name}
-    \label{fig:ambiguity_example}
-\end{figure}
+% For example see Figure~\ref{fig:ambiguity_example}.
+%
+% \begin{figure}[htpb]
+%     \centering
+%     \includegraphics[width=0.8\linewidth]{todo}
+%     \caption{Example of }
+%     \label{fig:ambiguity_example}
+% \end{figure}
 
 In this experiment we want to first evaluate how good are we able to detect misunderstanding and second how well are we able to recover in the dialog. 
 We especially want to focus on the misunderstanding detection at the beginning.
@@ -350,8 +347,8 @@ We plan to run the experiment as pure Wizard of Oz experiment, and also using a~
 
 \begin{figure}[htpb]
     \centering
-    \includegraphics[width=0.8\linewidth]{todo}
-    \caption{End-to-end system}
+    \includegraphics[width=1.0\linewidth]{gui-annotators-system}
+    \caption{End-to-end system data collection interface}
     \label{fig:e2end}
 \end{figure}
 
