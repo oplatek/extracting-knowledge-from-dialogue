@@ -122,8 +122,9 @@ It reduces the task of building text-to-text dialogue system to training a singl
 Neural networks dominate the first attempts~\cite{williams2016end,bordes_learning_2016,weston2015endtoend_prereq} to build conversational end-to-end systems.
 Using neural networks is an obvious choice because different models achieve state-of-the-art results for optimizing traditional components of a dialogue system:
 \begin{itemize}
-    \item language understanding (LU)~\cite{mairesse_spoken_2009} and dialogue state tracking (DST)~\cite{williams_web-style_2014,henderson2014word,vodolan_hybrid_2015,platek_recurrent_2016}
-    \item natural language generation (NLG)~\cite{dusek_sequence2sequence_2016,wen_networkbased_2016}
+    \item language understanding (LU) \cite{mairesse_spoken_2009} 
+    \item dialogue state tracking (DST) \cite{williams_web-style_2014,henderson2014word,vodolan_hybrid_2015,platek_recurrent_2016}
+    \item natural language generation (NLG) \cite{dusek_sequence2sequence_2016,wen_networkbased_2016}
     \item feedback/reward prediction~\cite{su_learning_2015}
 \end{itemize}
 Neural networks models not only achieve the best results in all the mentioned tasks but the models are relatively straightforward to combine and optimize jointly.
@@ -152,52 +153,54 @@ is often formulated as \todo{hidden markov model} See equation
     P(Y|X) = P(y_t | x_1, y_1, x_2, y_2, \dot x_{t-1}, y_{t-1}, x_t)
 \end{equation}
 
-Maximizing likelihood of next response given conversation history is not the ultimate goal which conversational agents should achieve.
-One want to lead dialogue by generating sensible, convenient replies which serve user well and mimicking corpora of human dialogues is only a basic option how to achieve it.
-Maximizing likelihood of the whole dialogue is intractable because of data sparsity issues with dialogues variability.
-Thus instead maximizing sequence of each reply conditionally independently (see Equation~\ref{eq:cond_history}) is used and sometimes even predicting next word is used which is a very crude attempt to mimic human corpora.
+Maximizing likelihood of next response given conversation history should not be the ultimate goal which conversational agents should achieve.
+First maximizing the likelihood of training data is as good as the original gold conversation were.
+Second one want to mimic the full dialogue not conditional independent prediction of next reply.
+Unfortunately, maximizing likelihood of the whole dialogue is intractable because of data sparsity issues.
 
-In Section~\ref{sub:rl} we introduce reinforcement learning (RL) as tool of our choice for overcome the presented shortcomings.
+In Section~\ref{sub:rl} we introduce reinforcement learning (RL) as tool of our choice for optimizing the evaluation/reward/loss function e.g. user satisfaction or mimicking the whole dialogue
 This section is devoted to discussion how a dialogue system can be evaluated using easy to compute loss function.
 Such function is not only useful for evaluating different models but can be directly use for updating system parameters using RL.
 
-We will discuss maximum likelihood
-
 \subsubsection*{Maximum likelihood: current state}\label{sub:maximum_likelihood}
+Training neural networks for dialogue from gold labels using cross entropy for supervised learning brings several challenges
 \begin{itemize}
-    \item Problem ambiguity vs uncertainty
-    \item Solved by regularization the model which needs annotations
-    \item Annotations are costly if not on well understood data if they are not end-to-end.
+    \item The prediction of next decision using the sequence-to-sequence model~\cite{bahdanou,todo} are conditionally independent given the sufficient statistics of the hidden state of the decoding RNN.
+    \item Dialogue responses of the system is often ambiguous and multiple options are equally possible.
+        On the other hand cross-entropy models the same way uncertainty and ambiguity and allows only one correct gold solution.
+        See Equation~\ref{eq:cross} where $p(x)$ is distribution approximated by distribution of samples over training data and updates of the neural networks needs to be perform only as difference between predicted likelihood $-log(q(x))$ and one log one-hot distribution
+        \begin{equation}\label{eq:cross}
+            H(p, q) = \sum_{x}{p(x) * (- log q(x))}     
+        \end{equation}
+    \item Further annotations of training pairs are costly and much more data is needed when annotations e.g.\ of dialogue state are not provided.
 \end{itemize}
+Despite the mentioned problems the cross-entropy training is the most successful method how to train neural networks.
 
-\subsubsection*{Combination of weak supervision}\label{sub:batch_rl}
-basically the same as the annotation if available
+\subsubsection*{Weak supervision for reinforcement learning}\label{sub:batch_rl}
+Reinforcement learning is appealing approach for updating statistical model parameters when a feedback for action the system is delayed or noisy~\cite{williams2016end,policy_rec_gradients}.
+In the field of dialogue systems, the RL was successfully used to optimize parameters of Gaussian processes used for selecting among several dozens of action~\cite{gasic2011line}.
+On the other hand, using quite noisy feedback from user at the end of dialogues is not convenient for training neural networks need to update large number of parameters and using thousands of live conversation with feedback is not enough.
+
+Completely different use of RL was successfully used with supervised cross-entropy pre-training an later optimizing for not differentiable loss function.~\cite{williams2016end}
+On the other, this approach still uses the same labeled data and annotations as used for supervised learning.
+The advantage of this approach is that it is able to naturally capture by the reward functions multiple valid actions.
+Furthermore, multi weak reward functions can be combined to form much stronger feedback signal.~\cite{todo}
 
 
-\subsubsection*{Learning the annotation scheme}\label{sub:irl}
-The models we discussed perform as well as their loss function captures the desired properties of the model.
-One of key properties of dialogues system and language in general that their domain and use changes over time so every predefined loss function becomes obsolete after some time.
-In addition, it is notoriously hard to find features for a good loss function before the dialogue system is deployed live.
+\subsubsection*{Learning to collect feedback}\label{sub:irl}
+If using the reinforcement or supervised learning it is assumed that the loss function is provided before the training.
+One of key properties of dialogues systems is that their domain changes over time~\cite{todo}, so every predefined loss function becomes obsolete after some time.
+In addition, specifying a good loss is notoriously hard since no standard measures for dialogue are widely accepted.
 
 Inverse reinforcement learning (IRL)\footnote{Also known as active reward learning~\cite{su2016active}.} is a task of learning the loss (or reward) function used in RL~\cite{abbeel_apprenticeship_2004}.
-Desired not to handcraft the loss function, but IRL is ill-posed problem in general and is guaranteed to work only for special cases e.g.~\cite{abbeel_apprenticeship_2004}.
-We aim to use inverse reinforcement learning and by structure of interactive conversation create one of the special cases.
-See Section~\ref{sec:learn_feedback}.
-
-
-\subsection{Batch and online reinforcement learning}
-\label{sub:rl}
-\begin{itemize}
-    \item Two keys properties which are useful
-        \begin{itemize}
-            \item directly optimizes the evaluation criterion
-            \item able to (slowly) learn from weak noisy delayed feedback
-        \end{itemize}
-\end{itemize}
-
+The IRL is ill-posed problem in general~\cite{todo} and is guaranteed to work only for special cases e.g.~\cite{abbeel_apprenticeship_2004}.
+In our experiments (see~Section~\ref{sec:feedback}) we aim to learn feedback from interactive conversation, but we plan to use IRL and similar approaches as reward shaping~\cite{su-todo} only for comparison.
+We describe our approach of collecting annotation in Section~\ref{sec:learn_feedback}.
 
 \section{Learning to Collect Feedback}
 \label{sec:learn_feedback}
+
+\todo{REWRITE THE MOST IMPORTant SECTION after experiments}
 A feedback in statistical models have different form.
 We introduced supervised learning and cross entropy for neural networks in~Section~\ref{sec:loss}.
 Supervised learning expects prepared annotation - labeled training data.
