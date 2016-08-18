@@ -166,14 +166,14 @@ First maximizing the likelihood of training data is as good as the original gold
 Second one want to mimic the full dialogue not conditional independent prediction of next reply.
 Unfortunately, maximizing likelihood of the whole dialogue is intractable because of data sparsity issues.
 
-In Section~\ref{sub:rl} we introduce reinforcement learning (RL) as tool of our choice for optimizing the evaluation/reward/loss function e.g. user satisfaction or mimicking the whole dialogue
+In Section~\ref{sub:data_annotation} we introduce reinforcement learning (RL) as tool of our choice for optimizing the evaluation/reward/loss function e.g. user satisfaction or mimicking the whole dialogue
 This section is devoted to discussion how a dialogue system can be evaluated using easy to compute loss function.
 Such function is not only useful for evaluating different models but can be directly use for updating system parameters using RL.
 
 \subsubsection*{Maximum likelihood: current state}\label{sub:maximum_likelihood}
 Training neural networks for dialogue from gold labels using cross entropy for supervised learning brings several challenges
 \begin{itemize}
-    \item The prediction of the~next decision using the sequence-to-sequence model~\cite{bahdanou,sutskever_sequence_2014} are conditionally independent given the sufficient statistics of the hidden state of the decoding RNN.
+    \item The prediction of the~next decision using the sequence-to-sequence model~\cite{bahdanau_neural_2014,sutskever_sequence_2014} are conditionally independent given the sufficient statistics of the hidden state of the decoding RNN.
     \item Dialogue responses of the system is often ambiguous and multiple options are equally possible.
         On the other hand cross-entropy models the same way uncertainty and ambiguity and allows only one correct gold solution.
         See Equation~\ref{eq:cross} where $p(x)$ is distribution approximated by distribution of samples over training data and updates of the neural networks needs to be perform only as difference between predicted likelihood $-log(q(x))$ and one log one-hot distribution
@@ -185,7 +185,7 @@ Training neural networks for dialogue from gold labels using cross entropy for s
 Despite the mentioned problems the cross-entropy training is the most successful method how to train neural networks.
 
 \subsubsection*{Weak supervision for reinforcement learning}\label{sub:batch_rl}
-Reinforcement learning is appealing approach for updating statistical model parameters when a feedback for action the system is delayed or noisy~\cite{williams2016end,policy_rec_gradients}.
+Reinforcement learning is appealing approach for updating statistical model parameters when a feedback for action the system is delayed or noisy~\cite{williams2016end,bahdanau_actor-critic_2016,wierstra_recurrent_2010}.
 In the field of dialogue systems, the RL was successfully used to optimize parameters of Gaussian processes used for selecting among several dozens of action~\cite{gasic2011line}.
 On the other hand, using quite noisy feedback from user at the end of dialogues is not convenient for training neural networks need to update large number of parameters and using thousands of live conversation with feedback is not enough.
 
@@ -202,7 +202,7 @@ In addition, specifying a good loss is notoriously hard since no standard measur
 
 Inverse reinforcement learning (IRL)\footnote{Also known as active reward learning~\cite{su2016active}.} is a task of learning the loss (or reward) function used in RL~\cite{abbeel_apprenticeship_2004}.
 The IRL is ill-posed problem in general~\cite{choi_inverse_2011} and is guaranteed to work only for special cases e.g.~\cite{abbeel_apprenticeship_2004}.  \todo{Understand~\cite{choi_inverse_2011} better}
-In our experiments (see~Section~\ref{sec:feedback}) we aim to learn feedback from interactive conversation, but we plan to use IRL and similar approaches as reward shaping~\cite{su2016active} only for comparison.
+In our experiments (see~Section~\ref{sec:experiments}) we aim to learn feedback from interactive conversation, but we plan to use IRL and similar approaches as reward shaping~\cite{su2016active} only for comparison.
 We describe our approach of collecting annotation in Section~\ref{sec:learn_feedback}.
 
 \section{Collecting Feedback}
@@ -210,7 +210,7 @@ We describe our approach of collecting annotation in Section~\ref{sec:learn_feed
 Extracting feedback from dialogues is possible in several ways as described earlier: through fixed loss function, through learned loss function or explicitly through annotations.
 The feedback can be stored either explicitly as annotations or in parameters of the model which models the conversations.
 We aim at learning to collect explicit annotations because annotations.
-We focus on collecting explicit feedback because it can be exploited by any model via supervised or reinforcement learning in contrast to storing the feedback in parameters of a statistical model e.g.\ neural networks which notoriously hard to reuse for new architectures~\cite{parameterNNtransfer}.
+We focus on collecting explicit feedback because it can be exploited by any model via supervised or reinforcement learning in contrast to storing the feedback in parameters of a statistical model e.g.\ neural networks which notoriously hard to reuse for new architectures~\cite{oquab_learning_2014}.
 We will also attempt to learn the feedback automatically because otherwise non trivial expert work is needed for designing the heuristics to collect the annotations.
 \todo{more details}
 \todo{coevolution,ali,atd}
@@ -306,7 +306,7 @@ We plan to use for evaluation the dataset collected in work~\cite{platek2016woch
 \subsubsection*{End-to-end system for consistent DB calls and system replies}
 In this experiment, we plan to evaluate end-to-end system which is an extension over the previous experiment which should provide us with reasonable accuracy of selecting the right database call.
 We plan to frame the NLG part of the system as classification task of predefined templates for its simplicity.
-The overall system (see Figure~\ref{fig:e2end}) will predict at each turn the DB call and a~template.
+The overall system (see Figure~\ref{fig:wochat}) will predict at each turn the DB call and a~template.
 The template will have placeholders for the DB call arguments and most importantly for the DB call result.\footnote{Implicit confirmation by repeating the arguments is a~common strategy for grounding~\cite{meena_crowdsourcing_2014}.}
 
 The evaluation will remain the same for choosing the right DB call and its result, the NLG part will be evaluated using accuracy on the golden data from~\cite{platek2016wochat} dataset and also using consistency with DB call and convenience for the dialogue history.
@@ -357,7 +357,7 @@ We plan to run the experiment as pure Wizard of Oz experiment, and also using a~
     \centering
     \includegraphics[width=1.0\linewidth]{gui-annotators-system}
     \caption{End-to-end system data collection interface}
-    \label{fig:e2end}
+    \label{fig:wochat}
 \end{figure}
 
 \subsubsection*{Data augmentation through exploration}
@@ -390,7 +390,7 @@ One example may be missing, outdated or incorrect piece of information in the DB
 Currently, we want to focus only on the incorrectly or outdated information when the user knows the correct answer.
 We want to explore if user is able to detect that system answer does not match reality and also if it is able to provide the correct answer.
 In this experiment we will use crowd-source workers to correct some intentionally outdated information about restaurant domain in Cambridge.
-The current interface see~Figure~\ref{fig:wochat} displays just the dialogue history for the user.
+The interface displays just the dialogue history for the user and also the DB to the operator (see see~Figure~\ref{fig:wochat}).
 For this experiment, a user will not be only informed about restaurant using text system reply which may be outdated, but a leaflet with updated address, price range and menu will be presented to the user.
 The user will be instructed to tell the system that it is providing incorrect information.
 We will investigate how often the user notice the mismatch between the information provided and the true state presented in the leaflet.

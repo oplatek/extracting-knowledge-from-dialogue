@@ -673,7 +673,7 @@ platek2016wochat
 	shorttitle = {Learning from real users},
 	booktitle = {{INTERSPEECH}},
 	author = {Su, Pei-Hao and Vandyke, David and Gasic, Milica and Kim, Dongho and Mrksic, Nikola and Wen, Tsung-Hsien and Young, Steve},
-	urldate = {2016-08-16},
+	urlyear = {2016-08-16},
 	year = {2015},
 	file = {[PDF] from arxiv.org:/Users/oplatek/Google Drive/zotero/storage/WHE6SZ8T/Su et al. - 2015 - Learning from real users Rating dialogue success .pdf:application/pdf;Snapshot:/Users/oplatek/Google Drive/zotero/storage/2H4DA4DD/1508.html:text/html}
 }
@@ -687,8 +687,8 @@ platek2016wochat
 	publisher = {Curran Associates, Inc.},
 	author = {Sutskever, Ilya and Vinyals, Oriol and Le, Quoc V},
 	editor = {Ghahramani, Z. and Welling, M. and Cortes, C. and Lawrence, N. D. and Weinberger, K. Q.},
-	urldate = {2016-08-18},
-	date = {2014},
+	urlyear = {2016-08-18},
+	year = {2014},
 	file = {NIPS Full Text PDF:/Users/oplatek/Google Drive/zotero/storage/ZI6FAWQ6/Sutskever et al. - 2014 - Sequence to Sequence Learning with Neural Networks.pdf:application/pdf;NIPS Snapshort:/Users/oplatek/Google Drive/zotero/storage/MPEHH7PJ/5346-information-based-learning-by-agents-in-unbounded-state-spaces.html:text/html}
 }
 
@@ -703,8 +703,8 @@ platek2016wochat
 	number = {2},
 	journaltitle = {Frontiers of Computer Science},
 	author = {Yu, Kai and Chen, Lu and Sun, Kai and Xie, Qizhe and Zhu, Su},
-	urldate = {2016-08-18},
-	date = {2016-04},
+	urlyear = {2016-08-18},
+	year = {2016-04},
 	langid = {english},
 	file = {fcs_15.pdf:/Users/oplatek/Google Drive/zotero/storage/B4XW8IZV/fcs_15.pdf:application/pdf}
 }
@@ -718,7 +718,61 @@ platek2016wochat
 	issue = {Mar},
 	journaltitle = {Journal of Machine Learning Research},
 	author = {Choi, Jaedeug and Kim, Kee-Eung},
-	urldate = {2016-08-18},
-	date = {2011},
+	urlyear = {2016-08-18},
+	year = {2011},
 	file = {choi11a.pdf:/Users/oplatek/Google Drive/zotero/storage/JQITB7X7/choi11a.pdf:application/pdf}
+}
+
+@article{bahdanau_neural_2014,
+	title = {Neural Machine Translation by Jointly Learning to Align and Translate},
+	url = {http://arxiv.org/abs/1409.0473},
+	abstract = {Neural machine translation is a recently proposed approach to machine translation. Unlike the traditional statistical machine translation, the neural machine translation aims at building a single neural network that can be jointly tuned to maximize the translation performance. The models proposed recently for neural machine translation often belong to a family of encoder-decoders and consists of an encoder that encodes a source sentence into a fixed-length vector from which a decoder generates a translation. In this paper, we conjecture that the use of a fixed-length vector is a bottleneck in improving the performance of this basic encoder-decoder architecture, and propose to extend this by allowing a model to automatically (soft-)search for parts of a source sentence that are relevant to predicting a target word, without having to form these parts as a hard segment explicitly. With this new approach, we achieve a translation performance comparable to the existing state-of-the-art phrase-based system on the task of English-to-French translation. Furthermore, qualitative analysis reveals that the (soft-)alignments found by the model agree well with our intuition.},
+	journaltitle = {{arXiv}:1409.0473 [cs, stat]},
+	author = {Bahdanau, Dzmitry and Cho, Kyunghyun and Bengio, Yoshua},
+	urldate = {2016-01-27},
+    year = {2014},
+	date = {2014-09-01},
+	eprinttype = {arxiv},
+	eprint = {1409.0473},
+	keywords = {Computer Science - Computation and Language, Computer Science - Learning, Computer Science - Neural and Evolutionary Computing, Statistics - Machine Learning},
+	file = {arXiv\:1409.0473 PDF:/Users/oplatek/Google Drive/zotero/storage/G468IBSZ/Bahdanau et al. - 2014 - Neural Machine Translation by Jointly Learning to .pdf:application/pdf;arXiv.org Snapshot:/Users/oplatek/Google Drive/zotero/storage/HQQQMDSZ/1409.html:text/html}
+}
+
+@article{bahdanau_actor-critic_2016,
+	title = {An Actor-Critic Algorithm for Sequence Prediction},
+	url = {http://arxiv.org/abs/1607.07086},
+	abstract = {We present an approach to training neural networks to generate sequences using actor-critic methods from reinforcement learning ({RL}). Current log-likelihood training methods are limited by the discrepancy between their training and testing modes, as models must generate tokens conditioned on their previous guesses rather than the ground-truth tokens. We address this problem by introducing a {\textbackslash}textit\{critic\} network that is trained to predict the value of an output token, given the policy of an {\textbackslash}textit\{actor\} network. This results in a training procedure that is much closer to the test phase, and allows us to directly optimize for a task-specific score such as {BLEU}. Crucially, since we leverage these techniques in the supervised learning setting rather than the traditional {RL} setting, we condition the critic network on the ground-truth output. We show that our method leads to improved performance on both a synthetic task, and for German-English machine translation. Our analysis paves the way for such methods to be applied in natural language generation tasks, such as machine translation, caption generation, and dialogue modelling.},
+	journaltitle = {{arXiv}:1607.07086 [cs]},
+	author = {Bahdanau, Dzmitry and Brakel, Philemon and Xu, Kelvin and Goyal, Anirudh and Lowe, Ryan and Pineau, Joelle and Courville, Aaron and Bengio, Yoshua},
+	urldate = {2016-08-16},
+    year = {2016},
+	eprinttype = {arxiv},
+	eprint = {1607.07086},
+	keywords = {Computer Science - Learning},
+	file = {arXiv\:1607.07086 PDF:/Users/oplatek/Google Drive/zotero/storage/5N88M6M7/Bahdanau et al. - 2016 - An Actor-Critic Algorithm for Sequence Prediction.pdf:application/pdf;arXiv.org Snapshot:/Users/oplatek/Google Drive/zotero/storage/MFTQIKNN/1607.html:text/html}
+}
+
+@article{wierstra_recurrent_2010,
+	title = {Recurrent policy gradients},
+	volume = {18},
+	url = {http://jigpal.oxfordjournals.org/content/18/5/620.short},
+	pages = {620--634},
+	number = {5},
+	journaltitle = {Logic Journal of {IGPL}},
+	author = {Wierstra, Daan and Förster, Alexander and Peters, Jan and Schmidhuber, Jürgen},
+	urldate = {2015-06-16},
+	year = {2010},
+	file = {Scholarpedia - Wierstra et al. - 2010 - Recurrent policy gradients.pdf:/Users/oplatek/Google Drive/zotero/storage/9QQQC4TK/Scholarpedia - Wierstra et al. - 2010 - Recurrent policy gradients.pdf:application/pdf;Wierstra et al. - 2010 - Recurrent policy gradients.pdf:/Users/oplatek/Google Drive/zotero/storage/RB8674Z9/Wierstra et al. - 2010 - Recurrent policy gradients.pdf:application/pdf}
+}
+
+
+@inproceedings{oquab_learning_2014,
+	title = {Learning and transferring mid-level image representations using convolutional neural networks},
+	url = {http://www.cv-foundation.org/openaccess/content_cvpr_2014/html/Oquab_Learning_and_Transferring_2014_CVPR_paper.html},
+	pages = {1717--1724},
+	booktitle = {Proceedings of the {IEEE} conference on computer vision and pattern recognition},
+	author = {Oquab, Maxime and Bottou, Leon and Laptev, Ivan and Sivic, Josef},
+	urldate = {2016-08-18},
+	year = {2014},
+	file = {[HTML] cv-foundation.org:/Users/oplatek/Google Drive/zotero/storage/EPRC7253/Oquab_Learning_and_Transferring_2014_CVPR_paper.html:text/html}
 }
