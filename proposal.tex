@@ -217,8 +217,8 @@ The feedback can be stored either explicitly as annotations or in parameters of 
 We aim at learning to collect explicit annotations because annotations.
 We focus on collecting explicit feedback because it can be exploited by any model via supervised or reinforcement learning in contrast to storing the feedback in parameters of a statistical model e.g.\ neural networks which notoriously hard to reuse for new architectures~\cite{oquab_learning_2014}.
 We will also attempt to learn the feedback automatically because otherwise non trivial expert work is needed for designing the heuristics to collect the annotations.
-\todo{more details}
-\todo{coevolution,ali,atd}
+\OP{more details} \\
+\OP{coevolution,ali,atd}
 
 \section{Experiments}
 \label{sec:experiments}
@@ -376,7 +376,7 @@ We suppose that we want to improve a end-to-end systems trained from conversatio
 The system is able to produce alternatives for each predicted actions and also their confidence scores.
 Using the scores we may not choose the recommended action by the system, but our active learning algorithm will decide on the alternative.
 We will use coverage and precision of problematic situation described in~\cite{meena_data-driven_2016}
-\todo{Which framework for choosing suggesting alternatives of current replies we will use - active learning framework with variables - failure of following dialogue - number of such history context seen - confidence of alternatives?}
+\todo{Which framework will we use for suggesting alternatives 1. active learning framework with variables - failure of following dialogue - number of such history context seen - confidence of alternatives?}
 % features from Raveesh Thesis 
 %  - utterance similarity - cosine distance 
 %  - disconfirmation - no/not presenece
