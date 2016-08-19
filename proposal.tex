@@ -203,26 +203,43 @@ In addition, specifying a good loss is notoriously hard since no standard measur
 Inverse reinforcement learning (IRL)\footnote{Also known as active reward learning~\cite{su2016active}.} is a task of learning the loss (or reward) function used in RL~\cite{abbeel_apprenticeship_2004}.
 The IRL is ill-posed problem in general~\cite{choi_inverse_2011} and is guaranteed to work only for special cases e.g.~\cite{abbeel_apprenticeship_2004,choi_inverse_2011}.  \todo{Understand choi better}
 In our experiments (see~Section~\ref{sec:experiments}) we aim to learn feedback from interactive conversation, but we plan to use IRL and similar approaches as reward shaping~\cite{su2016active} only for comparison.
-We describe our approach of collecting annotation in Section~\ref{sec:learn_feedback}.
+We describe our approach of collecting explicit annotation in Section~\ref{sec:learn_feedback}.
 
-\OP{current trends in optimizing the agent without necessity to prepare complex reward functions:
-\begin{itemize}
-    \item Su
-    \item adversarial neural networks and ALI
-\end{itemize}
-}
+Note, that collecting feedback explicitly for later use and IRL is not mutually exclusive.
+Promising framework which may overcome vagueness of current system because they do not model semantics well enough are adversarial networks especially~\cite{dumoulin_adversarially_2016}.
+The adversarially learned inference (ALI) model is a deep directed generative model which jointly learns a generation network and an inference network using an adversarial process. 
+The core idea is that one trains a generative model for dialogue system operator together with discriminator which attempts to recognize if generated dialogue is from the trained system or data sample from human (see Figure~\ref{fig:gan}).
+
+\begin{figure}[htpb]
+    \centering
+    \includegraphics[width=0.8\linewidth]{gan_simple}
+    \caption{Adversarial Learned Inference core idea~\cite{dumoulin_adversarially_2016}.\footnote{Picture taken from \url{https://ishmaelbelghazi.github.io/ALI/} website.} is to train of discriminator and generator as one network with two objectives. Discriminator separates real samples and generated samples and generator produce such artificial samples so that the discriminator cannot distinguish them from the real once.}
+    \label{fig:name}
+\end{figure}
+
+We are interested in this approach because one should be able to see which positive examples contributed the most for the performance of the generator (the dialogue system) by exploring the error updates and performance of the discriminator.
 
 
 \subsection{Architectures for neural end-to-end dialogue systems}
 \label{sub:nn_architectures}
-\OP{todo
+Neural architectures are used in two use-cases of conversational agents;
 \begin{itemize}
-    \item discuss chatbots 
-    \item no conditioning
-    \item latent extraction of topic of utterances
-    \item crucial conditioning on external resources - KB
+    \item Chatbots - Such systems are learned without any structured knowledge from plain conversations.
+    \item Task oriented system - learn to play role of expert and provides information from database to users.
+        They are trained in respect to the specific content of their database.
 \end{itemize}
-}
+
+The work of~\cite{serban_multiresolution_2016} is an example of neural network architecture which is able to mimic human-to-human conversations however quite often fails at capturing its semantics.
+This line of research improves upon language modeling using neural networks~\cite{mikolov_efficient_2013} and adapts modeling of next word prediction by more efficiently representing the discourse structures.
+The training of such models requires large corpora such as~\cite{lowe_ubuntu_2015}. 
+
+On the other hand, the task-oriented dialogue system works attempt to extract the common knowledge in the dialogue with help of database containing domain related information.
+A limited domain implicates that one is able to use only limited amount of data for training the systems.
+The true challenge poses how to model access to the system calls to the database because the calls are not recorded in the data if plain text transcriptions of the dialogue are used.
+One can only deduce that a part of the response is a result from some database call.
+
+The work of~\cite{wen_networkbased_2016} solved the problem by using the annotation of dialogue state which determines database calls and corresponding natural language response convenient for given dialogue state. 
+The simplistic system~\cite{williams2016end} showed that it is possible to use API calls\footnote{The system performs also other actions than accessed database so the term API call is used instead of DB calls.} without dialogue state annotation, but the system required {\it action mask} heuristics which determined whether an action is possible for given dialogue context.
 
 \section{Collecting Feedback}
 \label{sec:learn_feedback}
@@ -231,8 +248,6 @@ The feedback can be stored either explicitly as annotations or in parameters of 
 We aim at learning to collect explicit annotations because annotations.
 We focus on collecting explicit feedback because it can be exploited by any model via supervised or reinforcement learning in contrast to storing the feedback in parameters of a statistical model e.g.\ neural networks which notoriously hard to reuse for new architectures~\cite{oquab_learning_2014}.
 We will also attempt to learn the feedback automatically because otherwise non trivial expert work is needed for designing the heuristics to collect the annotations.
-
-
 
 \section{Experiments}
 \label{sec:experiments}
