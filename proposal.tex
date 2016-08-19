@@ -205,10 +205,24 @@ The IRL is ill-posed problem in general~\cite{choi_inverse_2011} and is guarante
 In our experiments (see~Section~\ref{sec:experiments}) we aim to learn feedback from interactive conversation, but we plan to use IRL and similar approaches as reward shaping~\cite{su2016active} only for comparison.
 We describe our approach of collecting annotation in Section~\ref{sec:learn_feedback}.
 
+\OP{current trends in optimizing the agent without necessity to prepare complex reward functions:
+\begin{itemize}
+    \item Su
+    \item adversarial neural networks and ALI
+\end{itemize}
+}
+
+
 \subsection{Architectures for neural end-to-end dialogue systems}
 \label{sub:nn_architectures}
-\OP{todo}
-
+\OP{todo
+\begin{itemize}
+    \item discuss chatbots 
+    \item no conditioning
+    \item latent extraction of topic of utterances
+    \item crucial conditioning on external resources - KB
+\end{itemize}
+}
 
 \section{Collecting Feedback}
 \label{sec:learn_feedback}
@@ -217,8 +231,8 @@ The feedback can be stored either explicitly as annotations or in parameters of 
 We aim at learning to collect explicit annotations because annotations.
 We focus on collecting explicit feedback because it can be exploited by any model via supervised or reinforcement learning in contrast to storing the feedback in parameters of a statistical model e.g.\ neural networks which notoriously hard to reuse for new architectures~\cite{oquab_learning_2014}.
 We will also attempt to learn the feedback automatically because otherwise non trivial expert work is needed for designing the heuristics to collect the annotations.
-\OP{more details} \\
-\OP{coevolution,ali,atd}
+
+
 
 \section{Experiments}
 \label{sec:experiments}
