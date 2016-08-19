@@ -137,38 +137,35 @@ Using neural networks is an obvious choice because different models achieve stat
 \end{itemize}
 Neural networks models not only achieve the best results in all the mentioned tasks but the models are relatively straightforward to combine and optimize jointly.
 The key to successfully training a neural network is to provide enough labeled data for the neural network since it need to learn a lot of unspecified structure and patterns.
-Luckily,neural network models complicated structure latently so one is able to collect more data in cheaper way because less annotation is needed.
+Luckily, neural networks capture structures in data latently so no annotation of the data structures is needed and one is able to collect data in much easier way.
 
 \subsection{Data annotation and loss function}
 \label{sub:data_annotation}
 
 The supervised learning of neural networks suppose that one is maximizing directly the log likelihood of conditional distribution $ P(Y| X) $ where the parameters of the distribution are estimated from training samples $ (\hat{X}, \hat{Y}) $.
 The sequential problems e.g.\ dialogue conversation are formulated as problem of generating next reply $y_t$ given the history $h_t$.
-In case of dialogue system the history represents sequence of previous system utterances and user responses $ y_1, x_1, y_2, \dot x_{t-1}, y_{t-1}, x_t $.
+In case of dialogue system the history is represented by sequence of previous system utterances and user responses $ y_1, x_1, y_2, \dot x_{t-1}, y_{t-1}, x_t $.
 
-Similarly to HMM models Recurrent Neural Networks (RNNs) deal with potentially unlimited history by introducing a latent state $ s_t$.
-When using RNNs~\cite{gers_learning_2000} in its simplest form for classification corresponding to HMM of order one the probability of action $ y_t $ is computed based on parameters for updating previous state $s_{t-1}$ to new state $s_t$ interpreting observation $x_t$ 
+Similarly to Hidden Markov Models (HMMs)~\cite{huang_hidden_1990} models Recurrent Neural Networks (RNNs) deal with potentially unlimited history by introducing a latent state $s_t$.\footnote{Unlike HMMs do not track probabilities in the hidden states but only sufficient statistics.}
+Simple use of  RNNs~\cite{gers_learning_2000} for classification reminds the structure of HMMs for maximum likelihood estimation e.g.\ in ASR~\cite{huang_hidden_1990}, but RNNs model the observation probabilities discriminatively (see Figure~\ref{fig:encoder}).
+The probability of action $ y_t $ is computed based on parameters for updating previous state $s_{t-1}$ to new state $s_t$ interpreting observation $x_t$.
 
-\begin{equation}
-    P(y_t| y_1, x_2, y_2, \dot, y_{t-1}, x_t) = P(y_t | s_{t-1}, y_{t-1}, x_t)
-\end{equation}
-is often formulated as \OP{hidden markov model} See equation
-\begin{equation}
-    P(Y|X) = P(y_t | x_1, y_1, x_2, y_2, \dot x_{t-1}, y_{t-1}, x_t)
-\end{equation}
-\begin{equation}
-    \label{eq:cond_history}
-    P(Y|X) = P(y_t | x_1, y_1, x_2, y_2, \dot x_{t-1}, y_{t-1}, x_t)
-\end{equation}
+\begin{figure}[htpb]
+    \centering
+    \includegraphics[width=0.8\linewidth]{encoder}
+    \caption{RNN encoder for classification. The output variables are conditioned on the hidden state. This model was used as baseline in~\cite{platek_recurrent_2016} and it classifies classifies DST state slots based on the last hidden state $h_t$ independently.}
+    \label{fig:encoder}
+\end{figure}
 
-Maximizing likelihood of next response given conversation history should not be the ultimate goal which conversational agents should achieve.
-First maximizing the likelihood of training data is as good as the original gold conversation were.
-Second one want to mimic the full dialogue not conditional independent prediction of next reply.
-Unfortunately, maximizing likelihood of the whole dialogue is intractable because of data sparsity issues.
+In the work of~\cite{wen_networkbased_2016}, a neural network model is trained for predicting dialogue history enhanced with labels $h_t = y_1, x_1, s_1, y_2, \dot x_{t-1}, y_{t-1}, s_{t-1}, x_t, s_t $ where $s_t$ is annotation of dialogue state in form of dialogue state items e.g {\it inform(food=Chinese, price\_range=expensive, area=west)}.
+The supervised end-to-end models maximize likelihood of next word in a reply using cross-entropy training.
 
-In Section~\ref{sub:data_annotation} we introduce reinforcement learning (RL) as tool of our choice for optimizing the evaluation/reward/loss function e.g. user satisfaction or mimicking the whole dialogue
-This section is devoted to discussion how a dialogue system can be evaluated using easy to compute loss function.
-Such function is not only useful for evaluating different models but can be directly use for updating system parameters using RL.
+
+Maximizing likelihood of next word in response or even next reply given conversation history should not be the ultimate goal which conversational agents should achieve.
+First, supervised approaches can achieve as good performance as the gold labeled data.
+Second, the independence assumptions of generating over next word from the hidden state are not true in dialogue.
+Unfortunately, maximizing likelihood of the whole dialogue jointly is intractable because of data sparsity issues as there number of possible sequences of replies in dialogue grows very fast for more and longer dialogues.
+
 
 \subsubsection*{Maximum likelihood: current state}\label{sub:maximum_likelihood}
 Training neural networks for dialogue from gold labels using cross entropy for supervised learning brings several challenges
@@ -185,6 +182,8 @@ Training neural networks for dialogue from gold labels using cross entropy for s
 Despite the mentioned problems the cross-entropy training is the most successful method how to train neural networks.
 
 \subsubsection*{Weak supervision for reinforcement learning}\label{sub:batch_rl}
+
+In this section, we introduce reinforcement learning (RL) as tool of our choice for optimizing the evaluation/reward/loss function e.g.\ user satisfaction or mimicking the whole dialogue.
 Reinforcement learning is appealing approach for updating statistical model parameters when a feedback for action the system is delayed or noisy~\cite{williams2016end,bahdanau_actor-critic_2016,wierstra_recurrent_2010}.
 In the field of dialogue systems, the RL was successfully used to optimize parameters of Gaussian processes used for selecting among several dozens of action~\cite{gasic2011line}.
 On the other hand, using quite noisy feedback from user at the end of dialogues is not convenient for training neural networks need to update large number of parameters and using thousands of live conversation with feedback is not enough.
@@ -194,6 +193,10 @@ On the other, this approach still uses the same labeled data and annotations as 
 The advantage of this approach is that it is able to naturally capture by the reward functions multiple valid actions.
 Furthermore, multiple weak reward functions can be combined to form much stronger feedback signal~\cite{abbeel_apprenticeship_2004}.
 
+Reinforcement learning performance quality depends on the reward information which can be used for updating parameters of the model and also on the amount of data available.
+Typically the reward is also used as scoring function for evaluating dialogues.
+However, if using the scoring function as reward function for reinforcement one would like to automate the computation, but a very basic and not satisfactory automatic scoring functions were suggested~\cite{liu_how_2016,lowe_evaluation_2016} so far. 
+Note also that some RL algorithms such as Sarsa need are on-policy algorithms and need to used on life systems, we focus on algorithms which can be used also in off-policy settings~\cite{sutton_reinforcement_1998}.
 
 \subsubsection*{Learning to collect feedback}\label{sub:irl}
 If using the reinforcement or supervised learning it is assumed that the loss function is provided before the training.
@@ -201,9 +204,14 @@ One of key properties of dialogues systems is that their domain changes over tim
 In addition, specifying a good loss is notoriously hard since no standard measures for dialogue are widely accepted.
 
 Inverse reinforcement learning (IRL)\footnote{Also known as active reward learning~\cite{su2016active}.} is a task of learning the loss (or reward) function used in RL~\cite{abbeel_apprenticeship_2004}.
-The IRL is ill-posed problem in general~\cite{choi_inverse_2011} and is guaranteed to work only for special cases e.g.~\cite{abbeel_apprenticeship_2004}.  \todo{Understand~\cite{choi_inverse_2011} better}
+The IRL is ill-posed problem in general~\cite{choi_inverse_2011} and is guaranteed to work only for special cases e.g.~\cite{abbeel_apprenticeship_2004,choi_inverse_2011}.  \todo{Understand choi better}
 In our experiments (see~Section~\ref{sec:experiments}) we aim to learn feedback from interactive conversation, but we plan to use IRL and similar approaches as reward shaping~\cite{su2016active} only for comparison.
 We describe our approach of collecting annotation in Section~\ref{sec:learn_feedback}.
+
+\subsection{Architectures for neural end-to-end dialogue systems}
+\label{sub:nn_architectures}
+\OP{todo}
+
 
 \section{Collecting Feedback}
 \label{sec:learn_feedback}
@@ -434,8 +442,8 @@ The zero-shot learning applies encoded prior information to extremely efficientl
 \section{Conclusion}
 \label{sec:conclusion}
 We presented our work in progress, motivated our past and future experiments and discussed possible difficulties.
-Our experiments are mainly described as classification tasks where typically neural network statistical models will be used.
-We choose neural network because they rather efficiently exploit labeled data but can be also fine-tuned with reinforcement retraining.
+Our experiments are mainly described as classification tasks where neural network statistical models will be used.
+We choose neural networks because they rather efficiently exploit labeled data but can be also fine-tuned with reinforcement retraining.
 However, our goal is to develop strategies which will help a conversational agent collect annotations and facts useful to any statistical inference algorithm.
 
 \section*{Acknowledgments}
