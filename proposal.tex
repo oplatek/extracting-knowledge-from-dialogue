@@ -7,7 +7,7 @@
 \usepackage{times}
 \usepackage{url}
 \usepackage{latexsym}
-
+\usepackage{multirow}
 \usepackage{todonotes}
 \usepackage{newclude}
 \usepackage{float}
@@ -73,6 +73,9 @@ By implementing these properties we aim at reducing the amount of data and annot
 \section{Introduction}
 \label{sec:introduction}
 \todo{DESCRIBE MUCH THOROUGHLY MY FIRST EXPERIMENTS}
+\todo{Explicit future section}
+\todo{Fix typos - obviously}
+
 The research of dialogue systems describes theories how interlocutors communicate, evaluates communication techniques for humans and artificial systems, and last but not least build the artificial conversational systems.
 Arguably, the most understood and commercial successful artificial systems are conversation agents playing role of expert in task oriented dialogue in narrow domain.
 Several research groups deployed such speech-to-speech on different domains, for example:
@@ -85,7 +88,7 @@ All the mentioned works conclude that action selection the task of dialogue mana
 However, the obvious differences between the domains and absence of widely accepted evaluation metrics for action selection do not allow comparison of the deployed techniques and algorithms.
 
 The lack of comparable research was the reason for organizing dialogue state tracking challenge (DSTC)~\cite{dstcwilliams} which resulted in successful evaluation of many dialogue state trackers on the restaurant domain.
-Dialogue state tracking probabilistically represents user's goal in predefined formalism such as dialogue acts~\cite{dstcwilliams,hendersonsecond,hendersonthird} which is updated as the conversation evolves.
+Dialogue state tracking probabilistically represents user's goal in predefined formalism such as dialogue acts~\cite{dstcwilliams,henderson2014second,hendersonthird} which is updated as the conversation evolves.
 The~DST representation is evaluated by easy to understand and widely accepted measures such as accuracy and L2 measure.\footnote{DSTC2 and DSTC3 challenges recommend using accuracy and L2 measures. In addition, one is advised not to evaluate the dialogue state trackers on the first turns where the dialogue state does not change.}
 The improvements of dialogue state trackers enable more informed and thus better action selection which is the ultimate goal of a dialogue system.
 
@@ -217,7 +220,7 @@ The core idea is that one trains a generative model for dialogue system operator
     \centering
     \includegraphics[width=0.8\linewidth]{gan_simple}
     \caption{Adversarial Learned Inference core idea~\cite{dumoulin_adversarially_2016}.\footnote{Picture taken from \url{https://ishmaelbelghazi.github.io/ALI/} website.} is to train of discriminator and generator as one network with two objectives. Discriminator separates real samples and generated samples and generator produce such artificial samples so that the discriminator cannot distinguish them from the real once.}
-    \label{fig:name}
+    \label{fig:gan}
 \end{figure}
 
 We are interested in this approach because one should be able to see which positive examples contributed the most for the performance of the generator (the dialogue system) by exploring the error updates and performance of the discriminator.
@@ -262,6 +265,34 @@ Our current focus is to develop an end-to-end task-oriented conversation agent o
 We take several steps to achieve this goal:
 First, work~\cite{platek_recurrent_2016} verifies that we are able to train recurrent neural networks for dialogue state tracking and achieve near state-of-the-art easily. 
 We frame the DST as sequence-to-sequence problem and used encoder-decoder (see Figure~\ref{fig:dst_seq2seq}. 
+
+
+% FIXME include results from other papers
+% TODO \begin{figure*}[tb]\vspace{-1mm}
+
+\begin{table*}[tb]\vspace{-1mm}
+
+\begin{center}
+\begin{tabular}{l@{\quad}rll}
+\hline
+
+Model & Dev set & Test set\\
+[2pt] \hline\rule{0pt}{12pt}
+% Joint  &  todo &  todo \\
+    Indep  &   0.892 & 0.727 \\
+\hline
+    \cite{vodolan_hybrid_2015} & - & 0.745 \\
+    \cite{zilka_incremental_2015} & 0.69 & 0.72 \\
+    \cite{henderson2013deep} & - & 0.737 \\
+\hline
+    DSTC2 stacking ensemble~\cite{henderson2014second} & - & 0.789 \\
+\hline
+\end{tabular}
+\caption{Accuracy of our DST encoder-decoder compared to other implementation. The first group contains our systems which use ASR output as input, the second group lists systems using also ASR hypothesis as input. The third group shows the results for ensemble model using ASR output and also live language understanding annotations.}
+\end{center}
+\label{tab:dstc}
+\end{table*}
+
 
 \begin{figure}[htpb]
     \centering
@@ -390,12 +421,12 @@ Optionally, we will investigate if the system uses correct response for recoveri
 
 We plan to run the experiment as pure Wizard of Oz experiment, and also using a~live deployed system.
 
-\begin{figure}[htpb]
+\begin{figure*}[tb]\vspace{-1mm}
     \centering
     \includegraphics[width=1.0\linewidth]{gui-annotators-system}
     \caption{End-to-end system data collection interface}
     \label{fig:wochat}
-\end{figure}
+\end{figure*}
 
 \subsubsection*{Data augmentation through exploration}
 The last of the planned experiments investigates if our implementation of error recovery detection and our clarification strategies are robust enough to label and thus discover new valid actions for given dialogue history.
@@ -407,7 +438,7 @@ The new data points - conversations - will be added to original dataset.
 We suppose that we want to improve a end-to-end systems trained from conversational data such as described at Section~\ref{sec:e2end}.
 The system is able to produce alternatives for each predicted actions and also their confidence scores.
 Using the scores we may not choose the recommended action by the system, but our active learning algorithm will decide on the alternative.
-We will use coverage and precision of problematic situation described in~\cite{meena_data-driven_2016}
+We will use coverage and precision of problematic situation described in~\cite{meena_datadriven_2016}
 \todo{Which framework will we use for suggesting alternatives 1. active learning framework with variables - failure of following dialogue - number of such history context seen - confidence of alternatives?}
 % features from Raveesh Thesis 
 %  - utterance similarity - cosine distance 
@@ -451,7 +482,7 @@ Effectively, it means that only the same starting labeled data together with col
 We see that collecting annotation have bigger benefit from longer point of view and additionally it is completely orthogonal to active reward learning.
 
 The topics of error detection and error recovery of dialogue systems has been described from several point of view, but we learned that most of experiments focused on ASR errors~\cite{skantze_error_2007}.
-The work of~\cite{meena_data-driven_2016} analysed how to detect and recover also from SLU and DM errors.
+The work of~\cite{meena_datadriven_2016} analysed how to detect and recover also from SLU and DM errors.
 \todo{Read and include work of~\cite{lopesspedial}.}
 However, the work primarily focused to discover errors offline and recommend designers which part of dialogues system needs more attention.
 
@@ -484,43 +515,3 @@ Computational resources were provided by the CESNET LM2015042 and the CERIT Scie
 \bibliography{literature}
 
 \end{document}
-
-
-% \begin{itemize}
-%     \item Easy first decoding for dialogue state tracking using reinforce algorithm
-%     \item Selecting correct entity from database based on dialogue history using reinforcement learning
-%     \item End-to-end system based on selecting an entity from database and answer generation word by word and using templates
-%     \item Pretending to be stupid a choosing incorrect action/argument
-% 		(when we are confident about the right action) 
-% 			on purpose and select the right alternative at the end
-% 			and record users reply and dialog continuation
-%         \begin{itemize}
-% 			\item simulating scenarios where we lack of data - we can back up to the original thread
-% 			\item {\bf error detection}: learn to classify if user is confused (need to prepare separate test \& dev set in advance
-%             \item we offer the right answer to finish the recovering phase
-%             \item evaluation the wanted action is satisfied? should always be yes
-%             \item {\bf error recovery}: learn how to respond better? 
-%                 \begin{itemize}
-%                 \end{itemize}
-%         \end{itemize}
-% 	\item Data collection with for error recovery
-% 		\begin{itemize}
-% 			\item we know how to detect errors
-% 			\item we need to better learn for users how to recover them
-% 			\item simple modification of current data collection pipeline
-% 		\end{itemize}
-%     \item Deploy evaluate system which can augment its own dataset for training
-% 		\begin{itemize}
-% 			\item we have two systems
-% 				\begin{itemize}
-% 					\item task-oriented policy
-% 				    \item system which is trained for error recovery for task-oriented policy
-% 			    \end{itemize}
-% 			\item evaluate if such system is:
-% 			    \begin{itemize}
-% 					\item perceived better than system without error recovery
-% 					\item if system with error recovery can augment data for both systems. E.g. if labels collected through the recovery phase help for retraining the systems.
-% 			    \end{itemize}
-% 		\end{itemize}
-% 	\item 
-% \end{itemize}
