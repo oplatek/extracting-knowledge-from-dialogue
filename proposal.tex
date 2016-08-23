@@ -61,20 +61,27 @@
 \begin{abstract}
 Building a conversation agent is a demanding process which is typically simplified by using narrow fixed conversation domain.
 The most effective approaches either use use a~very weak feedback and improve deployed dialog system or use supervised learning and labeled data.
-This work want build on the success of mentioned methods but focus on designing the conversational agents which will be able to:
+This work build on the success of mentioned methods but focus on designing the conversational agents which will be able to:
 \begin{itemize}
     \item collect explicit annotation interactively during the dialogue,
     \item enhancing the knowledge base of a system by new facts,
-    \item learn explicit reward signals from conversations.
+    \item learn explicit reward signals from conversations
 \end{itemize}
-By implementing these properties we aim at reducing the amount of data and annotation needed for developing a conversational agent and how to improve the agent over time.
+Consequently, such conversational system should:
+\begin{itemize}
+    \item need smaller amount of data and annotation needed for its optimization 
+    \item and self improve based on the collected feedback.
+\end{itemize}
 \end{abstract}
 
 \section{Introduction}
 \label{sec:introduction}
 \todo{DESCRIBE MUCH THOROUGHLY MY FIRST EXPERIMENTS}
-\todo{Explicit future section}
+\todo{Explicit future section compare to the current state of the model}
 \todo{Fix typos - obviously}
+\todo{self-improving mention in introduction}
+\todo{make clear that section 2 and 3 are others works}
+\todo{Separate section experiments to Published, In progress, Future work}
 
 The research of dialogue systems describes theories how interlocutors communicate, evaluates communication techniques for humans and artificial systems, and last but not least build the artificial conversational systems.
 Arguably, the most understood and commercial successful artificial systems are conversation agents playing role of expert in task oriented dialogue in narrow domain.
@@ -94,7 +101,7 @@ The improvements of dialogue state trackers enable more informed and thus better
 
 % Most of the dialog state trackers submitted to DSTC1, DSTC2 and DSTC3 used supervised learning to estimate the probabilities of dialogue state for given history\footnote{With the notable exception of~\cite{zilka_incremental_2015} tracker which perform simple Bayesian update without any learning and still achieves competitive results.}
 As a result of the DST challenge success, the dialog state tracking specified by manually designed ontology was widely adopted as it was used in the DST challenges.
-In general, we see the manually design ontology as arbitrary, costly and also error prone process.\footnote{The Cambridge restaurant ontology was polished over several years of research and it is actually rather simple.}
+In general, we see the manually designed ontology as arbitrary, costly and also error prone process.\footnote{The Cambridge restaurant ontology was polished over several years of research and it is actually rather simple.}
 Recently, it was shown by~\cite{wen_networkbased_2016} that the dialogue state annotations are the single annotations in additions to conversation transcriptions needed for training end-to-end system jointly, so it became even more important to specify high quality DST labels by the domain ontology.
 In our recent work~\cite{platek2016wochat}, we proposed alternative annotations of dialogue history which we describe in~Section~\ref{sec:experiments}.
 
@@ -109,17 +116,15 @@ We see the following research goals in the field of dialogue systems as the most
     \item Efficient exploiting knowledge gained from training a~single domain agent for extending its domain. 
 \end{enumerate}
 
+
 We propose a research direction which aims to tackle the first two problems, and if successful, it may help to solve also extending domain of the agent.
 
-First, we will focus on building an end-to-end conversation agent which eliminates laborious handcrafting but needs significant amount of training. 
-We review current state-of-the-art end-to-end dialogue system and describe our first steps we took for achieving this goal in Section~\ref{sec:e2end}.
+We review current state-of-the-art end-to-end dialogue system in Section~\ref{sec:e2end} in respect to our goals.
+In Section~\ref{sec:learn_feedback}, we summarize how a feedback is used for optimizing statistical models and how it is represented and extracted. 
 
-Second, we plan to design and optimize action selection process of dialogue system not only to increase user satisfaction, but also to learn new facts and thus perform more informed decisions.
-We propose the experiments and evaluation of such self-learning agent in Section~\ref{sec:experiments}.
-By introducing an end-to-end system that collects annotations which is used for its retraining we aim at reducing both the expert work and annotated data needed for launching such agent.
-At the same time, such agent improves its performance by live interactions with users and the annotations may be helpful for adapting to a new domain.
-
+In Section~\ref{sec:experiments} we describe steps we took and propose future work. 
 Finally in Section~\ref{sec:discussion}, we review the research direction we propose and compare it to other current approaches, we discuss potential challenges and stress importance of our approach.
+
 
 \section{End-to-End Conversational Agents}
 \label{sec:e2end}
@@ -255,27 +260,30 @@ We aim at learning to collect explicit annotations because annotations.
 We focus on collecting explicit feedback because it can be exploited by any model via supervised or reinforcement learning in contrast to storing the feedback in parameters of a statistical model e.g.\ neural networks which notoriously hard to reuse for new architectures~\cite{oquab_learning_2014}.
 We will also attempt to learn the feedback automatically because otherwise non trivial expert work is needed for designing the heuristics to collect the annotations.
 
-\section{Experiments}
-\label{sec:experiments}
-The following series of experiments explore the crucial problems which need to be solved before a conversational agent is able to extract information through interaction and later used them for self improvement.
+\section{Experiments} \label{sec:experiments}
+
+First, we will focus on building an end-to-end conversation agent which eliminates laborious handcrafting but needs significant amount of training. 
+
+Second, we plan to design and optimize action selection process of dialogue system which not only increase user satisfaction, but also to learn new facts and thus perform more informed decisions.
+We propose the experiments and evaluation of such self-learning agent in Section~\ref{sec:experiments}.
+By introducing an end-to-end system that collects annotations which is used for its retraining we aim at reducing both the expert work and annotated data needed for launching such agent.
+At the same time, such agent improves its performance by live interactions with users and the annotations may be helpful for adapting to a new domain.
+
+
+We suggest following experiments to explore the crucial problems which need to be solved before a conversational agent is able to extract information through interaction and later used them for self improvement.
 The experiments are designed as a proof of concept on narrow domain and scaling up to larger or multiple domains is left for future work or as obvious extensions. 
 
-\subsubsection*{Recent work}
-Our current focus is to develop an end-to-end task-oriented conversation agent on restaurant domain which is easy to train and provides reasonable baseline.
-We take several steps to achieve this goal:
-First, work~\cite{platek_recurrent_2016} verifies that we are able to train recurrent neural networks for dialogue state tracking and achieve near state-of-the-art easily. 
+We first describe our published works, then we introduce work in progress and finally we propose future work. 
+
+\subsection{Published work}
+Our worked so far focused on developing an end-to-end task-oriented conversation agent on restaurant domain which is easy to train and provides reasonable baseline.
+First, in work~\cite{platek_recurrent_2016} we verified that we are able to train recurrent neural networks for dialogue state tracking and achieve near state-of-the-art easily. 
 We frame the DST as sequence-to-sequence problem and used encoder-decoder (see Figure~\ref{fig:dst_seq2seq}. 
 
-
-% FIXME include results from other papers
-% TODO \begin{figure*}[tb]\vspace{-1mm}
-
 \begin{table*}[tb]\vspace{-1mm}
-
 \begin{center}
 \begin{tabular}{l@{\quad}rll}
 \hline
-
 Model & Dev set & Test set\\
 [2pt] \hline\rule{0pt}{12pt}
 % Joint  &  todo &  todo \\
@@ -293,7 +301,6 @@ Model & Dev set & Test set\\
 \label{tab:dstc}
 \end{table*}
 
-
 \begin{figure}[htpb]
     \centering
     \includegraphics[width=1.0\linewidth]{dst_seq2seq}
@@ -302,9 +309,12 @@ Model & Dev set & Test set\\
 \end{figure}
 
 Second, a dataset for training end-to-end system~\cite{platek2016wochat} was collected which focus on collecting easy-to-obtained annotations.
-Third, we are still working on training end-to-end system without expensive annotation such as dialogue state labels used in~\cite{wen_networkbased_2016}.
 
-The three presented works have in common that they explore how to synchronize system replies with latent action which the system needs to take.
+\subsection{Work in progress}
+We are still working on end-to-end system which can be optimized jointly.
+In contrast, with very recent papers our approach will need much less annotation and won't use dialogue state labels as in~\cite{wen_networkbased_2016}, but DB calls as described earlier.
+
+The problem 
 Example of such (partially) latent action is access to database.\footnote{Any action of an agent can be transformed to operation on database from the dialogue system point of view because the dialogue system may delegate the task through the database to other services which execute the actions.}
 If a system is supposed to query database for information it is a partially latent action because the system presents the results of the action to user.
 However, the user can not distinguish if the system is providing similar answer without accessing the database e.g.~choosing a~reasonable but incorrect answer based on the language model.
@@ -326,7 +336,7 @@ Such model needs to be trained to match KB actions and its replies but allows fl
     \label{fig:dai_gen}
 \end{figure}
 
-\subsubsection*{Future experiments}
+\subsection{Future work}
 
 \subsubsection*{Easy first decoding for dialogue state tracking using reinforce algorithm}
 We show in work~\cite{platek_recurrent_2016} that modeling DST as sequence-to-sequence may captures correlation between dialogue state values and also does nut suffer much from data sparsity.
