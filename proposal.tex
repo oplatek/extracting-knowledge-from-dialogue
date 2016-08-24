@@ -121,19 +121,15 @@ We propose a research direction which aims to tackle the first two problems, and
 
 We review current state-of-the-art end-to-end dialogue system in Section~\ref{sec:e2end} in respect to our goals.
 In Section~\ref{sec:learn_feedback}, we summarize how a feedback is used for optimizing statistical models and how it is represented and extracted. 
-
-In Section~\ref{sec:experiments} we describe steps we took and propose future work. 
-Finally in Section~\ref{sec:discussion}, we review the research direction we propose and compare it to other current approaches, we discuss potential challenges and stress importance of our approach.
+In Section~\ref{sec:experiments} we describe our results and we propose future work. 
+Ideally, our experiments will show that proposed models are able to learn from user feedback and the resulting dialogue system will be able to self-learn.
+Finally in Section~\ref{sec:discussion}, we review our work, discuss potential challenges and compare it to current research.
 
 
 \section{End-to-End Conversational Agents}
 \label{sec:e2end}
-End-to-end conversation agents is new appealing approach for building conversation agents.
-It reduces the task of building text-to-text dialogue system to training a single statistical model and thus
-\begin{itemize}
-    \item it avoids building complicated pipeline,
-    \item and it optimizes the response generation process jointly and thus avoid cumulating errors.
-\end{itemize}
+End-to-end conversation agents is a~new appealing approach for building conversation agents.
+It reduces the task of building text-to-text dialogue system to training a single statistical model and thus which optimizes the response generation process jointly and thus avoid cumulating errors.
 
 Neural networks dominate the first attempts~\cite{williams2016end,bordes_learning_2016,weston2015endtoend_prereq} to build conversational end-to-end systems.
 Using neural networks is an obvious choice because different models achieve state-of-the-art results for optimizing traditional components of a dialogue system:
@@ -165,13 +161,15 @@ The probability of action $ y_t $ is computed based on parameters for updating p
     \label{fig:encoder}
 \end{figure}
 
-In the work of~\cite{wen_networkbased_2016}, a neural network model is trained for predicting dialogue history enhanced with labels $h_t = y_1, x_1, s_1, y_2, \dot x_{t-1}, y_{t-1}, s_{t-1}, x_t, s_t $ where $s_t$ is annotation of dialogue state in form of dialogue state items e.g {\it inform(food=Chinese, price\_range=expensive, area=west)}.
-The supervised end-to-end models maximize likelihood of next word in a reply using cross-entropy training.
+In the work of~\cite{wen_networkbased_2016}, a neural end-to-end network model is trained for predicting dialogue history.
+The model is not trained only from dialogue conversation and the domain DB but it uses annotations to speed up its learning.
+Its dialogue history is expressed as $h_t = y_1, x_1, s_1, y_2, \dot x_{t-1}, y_{t-1}, s_{t-1}, x_t, s_t $ where $s_t$ is annotation of dialogue state in form of dialogue state items e.g {\it inform(food=Chinese, price\_range=expensive, area=west)}.
+The work optimize the model using supervised learning by maximizing likelihood of next word in a reply using cross-entropy training.
 
 
 Maximizing likelihood of next word in response or even next reply given conversation history should not be the ultimate goal which conversational agents should achieve.
-First, supervised approaches can achieve as good performance as the gold labeled data.
-Second, the independence assumptions of generating over next word from the hidden state are not true in dialogue.
+First, supervised approaches are limited by quality of the golden data.
+Second, the independence assumptions of generating next word from the hidden state are not true in dialogue.
 Unfortunately, maximizing likelihood of the whole dialogue jointly is intractable because of data sparsity issues as there number of possible sequences of replies in dialogue grows very fast for more and longer dialogues.
 
 
@@ -262,10 +260,8 @@ We will also attempt to learn the feedback automatically because otherwise non t
 
 \section{Experiments} \label{sec:experiments}
 
-First, we will focus on building an end-to-end conversation agent which eliminates laborious handcrafting but needs significant amount of training. 
-
-Second, we plan to design and optimize action selection process of dialogue system which not only increase user satisfaction, but also to learn new facts and thus perform more informed decisions.
-We propose the experiments and evaluation of such self-learning agent in Section~\ref{sec:experiments}.
+Our work focuses on building an end-to-end conversation agent which eliminates laborious handcrafting but needs significant amount of training. 
+Our approach is does not only optimize action selection process of dialogue system, but also attempts to learn new facts and thus perform more informed decisions.
 By introducing an end-to-end system that collects annotations which is used for its retraining we aim at reducing both the expert work and annotated data needed for launching such agent.
 At the same time, such agent improves its performance by live interactions with users and the annotations may be helpful for adapting to a new domain.
 
