@@ -309,16 +309,17 @@ Second, a dataset for training end-to-end system~\cite{platek2016wochat} was col
 We are still working on end-to-end system which can be optimized jointly.
 In contrast, with very recent papers our approach will need much less annotation and won't use dialogue state labels as in~\cite{wen_networkbased_2016}, but DB calls as described earlier.
 
-The problem 
-Example of such (partially) latent action is access to database.\footnote{Any action of an agent can be transformed to operation on database from the dialogue system point of view because the dialogue system may delegate the task through the database to other services which execute the actions.}
+A crucial problem of statistically modelling a dialogue system in end-to-end manner is that the agent performs latent actions which from the conversation point of view appear rather stochastically due to lack of data.
+However, the actions in fact follow strict logic.
+Example of such (partially) latent actions are calls to database.\footnote{Any action of an agent can be transformed to operation on database from the dialogue system point of view because the dialogue system may delegate the task through the database to other services which execute the actions.}
 If a system is supposed to query database for information it is a partially latent action because the system presents the results of the action to user.
 However, the user can not distinguish if the system is providing similar answer without accessing the database e.g.~choosing a~reasonable but incorrect answer based on the language model.
 An example of completely latent action is if a user request a Pizza the system should access the database and create and entry to database.
 However, the user typically only suppose that the system executed the correct action.
-As a result if one want to train a dialogue system one need to design objective function and data representations which force the latent action correspond to system replies.
+As a result if one want to train a dialogue system one need to design objective function and data representations which force the latent action correspond to system replies, so the logic of the latent actions is maintained.
 
 A common approach is to use dialog state tracking for updating the dialogue state represented in discrete form such as dialogue state items (see Figure~\ref{fig:dai_gen}) and a dialogue policy which execute operations on KB and produces plan for NLG what to say which is compatible with KB actions~\cite{dusek_sequence2sequence_2016,young2010hidden}.
-Alternative approach in simplistic form in~\cite{wen_networkbased_2016} where a KB operation was executed or skipped based on the dialogue state but the NLG uses the only the dialogue state and the result of KB operation to generate reply.
+Alternative approach is presented in simplistic form in~\cite{wen_networkbased_2016} where a KB operation is executed or skipped based on the dialogue state but the NLG uses the only the dialogue state and the result of KB operation to generate reply.
 We propose to predict directly which KB operation to use from hidden state $h_t$ of neural network and based on the select KB operation's result and the same state $h_t$ predict sequence of words what to reply.
 Such model needs to be trained to match KB actions and its replies but allows flexibility how to communicate about system actions which is goal of our research.
 \todo{describe the model in detail}
