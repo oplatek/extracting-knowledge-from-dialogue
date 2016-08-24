@@ -166,8 +166,7 @@ The model is not trained only from dialogue conversation and the domain DB but i
 Its dialogue history is expressed as $h_t = y_1, x_1, s_1, y_2, \dot x_{t-1}, y_{t-1}, s_{t-1}, x_t, s_t $ where $s_t$ is annotation of dialogue state in form of dialogue state items e.g {\it inform(food=Chinese, price\_range=expensive, area=west)}.
 The work optimize the model using supervised learning by maximizing likelihood of next word in a reply using cross-entropy training.
 
-
-Maximizing likelihood of next word in response or even next reply given conversation history should not be the ultimate goal which conversational agents should achieve.
+The cross-entropy training is the most successful method how to train neural networks, but maximizing likelihood of next word in response should not be the ultimate goal which conversational agents should achieve.
 First, supervised approaches are limited by quality of the golden data.
 Second, the independence assumptions of generating next word from the hidden state are not true in dialogue.
 Unfortunately, maximizing likelihood of the whole dialogue jointly is intractable because of data sparsity issues as there number of possible sequences of replies in dialogue grows very fast for more and longer dialogues.
@@ -185,39 +184,39 @@ Training neural networks for dialogue from gold labels using cross entropy for s
         \end{equation}
     \item Further annotations of training pairs are costly and much more data is needed when annotations e.g.\ of dialogue state are not provided.
 \end{itemize}
-Despite the mentioned problems the cross-entropy training is the most successful method how to train neural networks.
 
 \subsubsection*{Weak supervision for reinforcement learning}\label{sub:batch_rl}
 
 In this section, we introduce reinforcement learning (RL) as tool of our choice for optimizing the evaluation/reward/loss function e.g.\ user satisfaction or mimicking the whole dialogue.
 Reinforcement learning is appealing approach for updating statistical model parameters when a feedback for action the system is delayed or noisy~\cite{williams2016end,bahdanau_actor-critic_2016,wierstra_recurrent_2010}.
 In the field of dialogue systems, the RL was successfully used to optimize parameters of Gaussian processes used for selecting among several dozens of action~\cite{gasic2011line}.
-On the other hand, using quite noisy feedback from user at the end of dialogues is not convenient for training neural networks need to update large number of parameters and using thousands of live conversation with feedback is not enough.
+On the other hand, using quite noisy feedback from thousands of live conversation with user feedback at the end of dialogues is not convenient for training neural networks because they need to update large number of parameters and such feedback is too weak.
 
-Completely different use of RL was successfully used with supervised cross-entropy pre-training an later optimizing for not differentiable loss function.~\cite{williams2016end}
+Note RL was successfully used with supervised cross-entropy pre-training an later optimizing for not differentiable loss function.~\cite{williams2016end}
 On the other, this approach still uses the same labeled data and annotations as used for supervised learning.
 The advantage of this approach is that it is able to naturally capture by the reward functions multiple valid actions.
 Furthermore, multiple weak reward functions can be combined to form much stronger feedback signal~\cite{abbeel_apprenticeship_2004}.
 
 Reinforcement learning performance quality depends on the reward information which can be used for updating parameters of the model and also on the amount of data available.
 Typically the reward is also used as scoring function for evaluating dialogues.
-However, if using the scoring function as reward function for reinforcement one would like to automate the computation, but a very basic and not satisfactory automatic scoring functions were suggested~\cite{liu_how_2016,lowe_evaluation_2016} so far. 
+However, if using the scoring function as reward function for reinforcement one would like to automate the computation, but only partial and not satisfactory automatic scoring functions were suggested~\cite{liu_how_2016,lowe_evaluation_2016} so far. 
 Note also that some RL algorithms such as Sarsa need are on-policy algorithms and need to used on life systems, we focus on algorithms which can be used also in off-policy settings~\cite{sutton_reinforcement_1998}.
 
 \subsubsection*{Learning to collect feedback}\label{sub:irl}
 If using the reinforcement or supervised learning it is assumed that the loss function is provided before the training.
-One of key properties of dialogues systems is that their domain changes over time~\cite{yu_evolvable_2016}, so every predefined loss function becomes obsolete after some time.
+One of key properties of dialogues systems is that their domain change over time~\cite{yu_evolvable_2016}, so every predefined loss function becomes obsolete after some time.
 In addition, specifying a good loss is notoriously hard since no standard measures for dialogue are widely accepted.
 
 Inverse reinforcement learning (IRL)\footnote{Also known as active reward learning~\cite{su2016active}.} is a task of learning the loss (or reward) function used in RL~\cite{abbeel_apprenticeship_2004}.
-The IRL is ill-posed problem in general~\cite{choi_inverse_2011} and is guaranteed to work only for special cases e.g.~\cite{abbeel_apprenticeship_2004,choi_inverse_2011}.  \todo{Understand choi better}
+IRL could be used for learning how to interpret user feedback, but the IRL is ill-posed problem in general~\cite{choi_inverse_2011} and is guaranteed to work only for special cases e.g.~\cite{abbeel_apprenticeship_2004,choi_inverse_2011}.  \todo{Understand choi better}
 In our experiments (see~Section~\ref{sec:experiments}) we aim to learn feedback from interactive conversation, but we plan to use IRL and similar approaches as reward shaping~\cite{su2016active} only for comparison.
 We describe our approach of collecting explicit annotation in Section~\ref{sec:learn_feedback}.
 
 Note, that collecting feedback explicitly for later use and IRL is not mutually exclusive.
-Promising framework which may overcome vagueness of current system because they do not model semantics well enough are adversarial networks especially~\cite{dumoulin_adversarially_2016}.
+Promising framework which may overcome vagueness of current system are adversarial networks especially~\cite{dumoulin_adversarially_2016}.
 The adversarially learned inference (ALI) model is a deep directed generative model which jointly learns a generation network and an inference network using an adversarial process. 
 The core idea is that one trains a generative model for dialogue system operator together with discriminator which attempts to recognize if generated dialogue is from the trained system or data sample from human (see Figure~\ref{fig:gan}).
+We hope that discriminator may learn to distinguish the responses also on semantic level of the system's domain which current approaches mostly ignore. 
 
 \begin{figure}[htpb]
     \centering
@@ -226,8 +225,8 @@ The core idea is that one trains a generative model for dialogue system operator
     \label{fig:gan}
 \end{figure}
 
-We are interested in this approach because one should be able to see which positive examples contributed the most for the performance of the generator (the dialogue system) by exploring the error updates and performance of the discriminator.
-
+We are also interested in this approach because one should be able to see which positive examples contributed the most for the performance of the generator (the dialogue system) by exploring the error updates and performance of the discriminator.
+Thus the discriminator could provide us with automatic annotations. 
 
 \subsection{Architectures for neural end-to-end dialogue systems}
 \label{sub:nn_architectures}
