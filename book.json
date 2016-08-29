@@ -4,7 +4,7 @@
         "summary": "SUMMARY.md"
     },
     "plugins": ["mathjax-full"],
-    "unused-plugins": ["bibtex"]
+    "unused-plugins": ["bibtex"],
 	"unused-pluginsConfig": {
 		"bibtex": {
 			"bibliography": "literature.bib"
