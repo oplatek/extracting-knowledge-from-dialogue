@@ -1,6 +1,7 @@
 # Summary
 
 * [Progress documentation](README.md)
+<!-- disable compiling
 * [Introduction](01-intro.md)
 * [Current State of the Art in Self-learning Agents](02-current-self.md)
 * [Current State of the Art in End-to-end Conversational Systems](03-current-e2end.md)
@@ -8,6 +9,7 @@
 * [Related Work](05-related.md)
 * [Experiments and Implemented Models](06-experiments.md)
 * [Conclusion and Future Work](07-conclusion.md)
+-->
 
 <!--- 
 Example how to use equations
