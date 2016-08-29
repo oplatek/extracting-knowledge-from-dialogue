@@ -76,12 +76,6 @@ Consequently, such conversational system should:
 
 \section{Introduction}
 \label{sec:introduction}
-\todo{DESCRIBE MUCH THOROUGHLY MY FIRST EXPERIMENTS}
-\todo{Explicit future section compares to the current state of the model}
-\todo{Fix typos - obviously}
-\todo{self-improving mention in the introduction}
-\todo{make clear that section 2 and 3 are others works}
-\todo{Separate section experiments to Published, In progress, Future work}
 
 The research of dialogue systems describes theories how interlocutors communicate, evaluates communication techniques for humans and artificial systems, and last but not least build the artificial conversational systems.
 Arguably, the most understood and commercial successful artificial systems are conversation agents playing role of expert in task oriented dialogue in narrow domain.
@@ -121,7 +115,7 @@ We propose a research direction which aims to tackle the first two problems, and
 
 We review current state-of-the-art end-to-end dialogue system in Section~\ref{sec:e2end} in respect to our goals.
 In Section~\ref{sec:learn_feedback}, we summarize how a feedback is used for optimizing statistical models and how it is represented and extracted. 
-In Section~\ref{sec:experiments} we describe our results and we propose future work. 
+In Section~\ref{sec:experiments} we describe our results and we propose future work in~Section~\ref{sec:future}. 
 Ideally, our experiments will show that proposed models are able to learn from user feedback and the resulting dialogue system will be able to self-learn.
 Finally in Section~\ref{sec:discussion}, we review our work, discuss potential challenges and compare it to current research.
 
@@ -209,9 +203,10 @@ One of key properties of dialogues systems is that their domain change over time
 In addition, specifying a good loss is notoriously hard since no standard measures for dialogue are widely accepted.
 
 Inverse reinforcement learning (IRL)\footnote{Also known as active reward learning~\cite{su2016active}.} is a task of learning the loss (or reward) function used in RL~\cite{abbeel_apprenticeship_2004}.
-IRL could be used for learning how to interpret user feedback, but the IRL is ill-posed problem in general~\cite{choi_inverse_2011} and is guaranteed to work only for special cases e.g.~\cite{abbeel_apprenticeship_2004,choi_inverse_2011}.  \todo{Understand Choi better}
-In our experiments (see~Section~\ref{sec:experiments}) we aim to learn feedback from an~interactive conversation, but we plan to use IRL and similar approaches as reward shaping~\cite{su2016active} only for comparison.
-We describe our approach of collecting explicit annotation in Section~\ref{sec:learn_feedback}.
+IRL could be used for learning how to interpret user feedback, but the IRL is ill-posed problem in general~\cite{choi_inverse_2011} and is guaranteed to work only for special cases e.g.~\cite{abbeel_apprenticeship_2004,choi_inverse_2011}.
+% \todo{Understand Choi better}
+In our future work (see~Section~\ref{sec:future}) we aim to learn feedback from an~interactive conversation, but we plan to use IRL and similar approaches as reward shaping~\cite{su2016active} only for comparison.
+We describe alternative approaches of collecting explicit annotation in Section~\ref{sec:learn_feedback}.
 
 Note, that collecting feedback explicitly for later use and IRL is not mutually exclusive.
 A~promising framework which may overcome vagueness of current system is adversarial networks, especially~\cite{dumoulin_adversarially_2016}, which remotely resemble inverse reinforcement learning.
@@ -265,24 +260,19 @@ Our approach does not only optimize action selection process of a~dialogue syste
 By introducing an end-to-end system that collects annotations which are used for its retraining we aim at reducing both the expert work and annotated data needed for launching such agent.
 At the same time, such agent improves its performance by live interactions with users and the annotations may be helpful for adapting to a new domain.
 
-
-We suggest following experiments to explore the crucial problems which need to be solved before a conversational agent is able to extract information through interaction and later used them for self-improvement.
-The experiments are designed as a proof of concept on a~narrow domain and scaling up to larger or multiple domains are left for future work or as obvious extensions. 
-
-We first describe our published works, then we introduce work in progress and finally we propose future work. 
+We first describe our published works, then we introduce work in progress and finally we propose future work in the next Section~\ref{sec:future}. 
 
 \subsection{Published work}
 Our work so far has focused on developing an end-to-end task-oriented conversation agent on restaurant domain which is easy to train and provides a~reasonable baseline.
 First, in work~\cite{platek_recurrent_2016} we verified that we are able to train recurrent neural networks for dialogue state tracking and achieve near state-of-the-art easily. 
 We frame the DST as sequence-to-sequence problem and used encoder-decoder (see Figure~\ref{fig:dst_seq2seq}. 
 
-\begin{table*}[tb]\vspace{-1mm}
+\begin{table*}[tb]
 \begin{center}
 \begin{tabular}{l@{\quad}rll}
 \hline
 Model & Dev set & Test set\\
 [2pt] \hline\rule{0pt}{12pt}
-% Joint  &  todo &  todo \\
     Indep  &   0.892 & 0.727 \\
 \hline
     \cite{vodolan_hybrid_2015} & - & 0.745 \\
@@ -307,8 +297,8 @@ Model & Dev set & Test set\\
 Second, a dataset for training end-to-end system~\cite{platek2016wochat} was collected which focus on collecting easy-to-obtained annotations.
 
 \subsection{Work in progress}
+
 We are still working on a~end-to-end system which can be optimized jointly.
-\OP{describe problems and how to solve them}
 In contrast, with very recent papers our approach will need much less annotation and won't use dialogue state labels as in~\cite{wen_networkbased_2016}, but DB calls as described earlier.
 
 A crucial problem of end-to-end statistical models for a dialogue system is that the dialogue agent performs latent actions which appear rather stochastically due to lack of training data.
@@ -325,19 +315,23 @@ An~alternative approach is presented in a~simplistic form in~\cite{wen_networkba
 We propose to predict directly which KB operation to use from the~hidden state $h_t$ of neural network and later predict the system reply.
 The reply will be predicted conditioned on the selected KB call's result and the same state $h_t$ state and will be generated in word by word manner.
 Such model needs to be trained so the KB actions match the model's replies but it allows flexibility how to communicate about system actions.
+\todo{describe problems and how to solve them}
 \todo{how to simplify the model - templates}
-\todo{describe the model in detail}
+\todo{todo what model we tried and conclude that we did not have enough data, model too complicated}
 \todo{describe expected results}
 
-\begin{figure}[htpb]
+\begin{figure*}[tb]
     \centering
     \includegraphics[width=1.0\linewidth]{dusek_seq2seq}
     \caption{Dialogue act items tracking and generation. A policy ensures that each access to DB corresponds to NLG plan what to say~\cite{dusek_sequence2sequence_2016}.}
     \label{fig:dai_gen}
-\end{figure}
+\end{figure*}
 
-\subsection{Future work}
+\section{Future work}\label{sec:future}
 
+
+We suggest following experiments to explore the crucial problems which need to be solved before a conversational agent is able to extract information through interaction and later used them for self-improvement.
+The experiments are designed as a proof of concept on a~narrow domain and scaling up to larger or multiple domains are left for future work or as obvious extensions. 
 
 \subsubsection*{Easy first decoding for dialogue state tracking using reinforce algorithm}
 We show in work~\cite{platek_recurrent_2016} that modeling DST as sequence-to-sequence captures correlation between dialogue state values and also does nut suffer much from data sparsity.
@@ -396,7 +390,7 @@ We hope that limited number of templates will enable easier quantifications.
 
 \subsubsection*{Misunderstandings data collection}
 We assume that error handling is relatively frequent, one should be able to detect it and recover from it~\cite{skantze_error_2007}.
-\todo{mention early error detection}
+% \todo{mention early error detection}
 In contrast, to~\cite{skantze_error_2007} who focused on ASR errors we focus on following sources of errors which lead to misunderstanding:
 \begin{itemize}
     \item out-of-domain user query and inappropriate system reply,
@@ -432,7 +426,7 @@ Optionally, we will investigate if the system uses correct response for recoveri
 
 We plan to run the experiment as pure Wizard of Oz experiment, and also using a~live deployed system.
 
-\begin{figure*}[tb]\vspace{-1mm}
+\begin{figure*}[tb]
     \centering
     \includegraphics[width=1.0\linewidth]{gui-annotators-system}
     \caption{End-to-end system data collection interface}
@@ -497,7 +491,7 @@ We see that collecting annotation have bigger benefit from longer point of view 
 
 The topics of error detection and error recovery of dialogue systems has been described from several point of view, but we learned that most of experiments focused on ASR errors~\cite{skantze_error_2007}.
 The work of~\cite{meena_datadriven_2016} analysed how to detect and recover also from SLU and DM errors.
-\todo{Read and include work of~\cite{lopesspedial}.}
+% \todo{Read and include work of~\cite{lopesspedial}.}
 However, the work primarily focused to discover errors offline and recommend designers which part of dialogues system needs more attention.
 
 The work of~\cite{pappu_knowledge_2014} detects errors over multiple components over multiple components and then employs post processing step.
