@@ -3,11 +3,14 @@
     "structure": {
         "summary": "SUMMARY.md"
     },
-    "plugins": ["bibtex", "mathjax-full"],
-	"pluginsConfig": {
+    "plugins": ["mathjax-full"],
+    "unused-plugins": ["bibtex"]
+	"unused-pluginsConfig": {
 		"bibtex": {
 			"bibliography": "literature.bib"
-		},
+		}
+	},
+	"pluginsConfig": {
 		"mathjax": {
 			"forceSVG": true
 		}
