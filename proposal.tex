@@ -60,12 +60,12 @@
 \maketitle
 \begin{abstract}
 Building a conversation agent is a demanding process which is typically simplified by using narrow fixed conversation domain.
-The most effective approaches either use use a~very weak feedback and improve deployed dialogue system via reinforcement learning or use supervised learning and labeled data.
-This work build on the success of mentioned methods but focus on designing the conversational agents which will be able to:
+The most effective approaches either use a~very weak feedback and improve deployed dialogue system via reinforcement learning or use supervised learning and labeled data.
+This work build on the success of then methods above and focuses on designing the conversational agents which will be able to:
 \begin{itemize}
     \item collect explicit annotation interactively during the dialogue,
     \item enhancing the knowledge base of a system by new facts,
-    \item learn recognize explicit reward signals in conversations.
+    \item learn to recognize explicit reward signals in conversations.
 \end{itemize}
 Consequently, such conversational system should:
 \begin{itemize}
@@ -79,23 +79,25 @@ Consequently, such conversational system should:
 
 The research of dialogue systems describes theories how interlocutors communicate, evaluates communication techniques for humans and artificial systems, and last but not least build the artificial conversational systems.
 Arguably, the most understood and commercial successful artificial systems are conversation agents playing role of expert in task oriented dialogue in narrow domain.
-Several research groups deployed such speech-to-speech on different domains, for example:
+Several research groups deployed such speech-to-speech dialogue system on different domains, for example:
 \begin{itemize}
     \item Let's go system~\cite{raux_lets_2005} helped the participants of experiments book a flight ticket.
-    \item The Cambridge group repeatedly uses Cambridge restaurant domain to evaluate experiments on crowdsourced users where the user search for a restaurant in Cambridge.
+    \item The Cambridge group repeatedly uses Cambridge restaurant domain to evaluate experiments on crowdsourced users where users search for a restaurant in Cambridge.
     \item The work of~\cite{dusek_sequence2sequence_2016} and \cite{vejman_martin_development_2015} evaluates their system on Public Transformation domain in Prague and New York respectively on crowdsourced and also real users. 
 \end{itemize}
-All the mentioned works conclude that action selection the task of dialogue management plays central role in leading a dialogue.
+All the mentioned works conclude that action selection (the task of dialogue management) plays central role in leading a dialogue.
 However, the obvious differences between the domains and absence of widely accepted evaluation metrics for action selection do not allow comparison of the deployed techniques and algorithms.
 
 The lack of comparable research was the reason for organizing dialogue state tracking challenge (DSTC)~\cite{dstcwilliams} which resulted in successful evaluation of many dialogue state trackers on the restaurant domain.
-Dialogue state tracking probabilistically represents user's goal in predefined formalism such as dialogue acts~\cite{dstcwilliams,henderson2014second,hendersonthird} which is updated as the conversation evolves.
-The~DST representation is evaluated by easy to understand and widely accepted measures such as accuracy and L2 measure.\footnote{DSTC2 and DSTC3 challenges recommend using accuracy and L2 measures. In addition, one is advised not to evaluate the dialogue state trackers on the first turns where the dialogue state does not change.}
+Dialogue state tracking probabilistically represents user's goal in predefined formalism such as dialogue acts~\cite{dstcwilliams,henderson2014second,hendersonthird}.
+The distribution over slots and their values is updated as the conversation evolves.
+The~DST evaluates the quality of the distribution by easy to understand and widely accepted measures such as accuracy and L2 measure.\footnote{DSTC2 and DSTC3 challenges recommend using accuracy and L2 measures. In addition, one is advised not to evaluate the dialogue state trackers on the first turns where the dialogue state does not change.}
 The improvements of dialogue state trackers enable more informed and thus better action selection which is the ultimate goal of a dialogue system.
 
 % Most of the dialogue state trackers submitted to DSTC1, DSTC2 and DSTC3 used supervised learning to estimate the probabilities of dialogue state for given history\footnote{With the notable exception of~\cite{zilka_incremental_2015} tracker which perform simple Bayesian update without any learning and still achieves competitive results.}
-As a result of the DST challenge success, the dialogue state tracking specified by manually designed ontology was widely adopted as it was used in the DST challenges.
-In general, we see the manually designed ontology as arbitrary, costly and also error prone process.\footnote{The Cambridge restaurant ontology was polished over several years of research and it is actually rather simple.}
+The dialogue state is commonly defined by manually designed domain ontology.
+Thanks to the DST challenge success, where a handcrafted ontology was provided, it may seem easy to design such ontology\footnote{The Cambridge restaurant ontology had been polished over several years of research and it is actually rather simple.}.
+In general, we see the manually designed ontology as arbitrary, costly and also error prone process.
 Recently, it was shown by~\cite{wen_networkbased_2016} that the dialogue state annotations are the single annotations in additions to conversation transcriptions needed for training end-to-end system jointly, so it became even more important to specify high-quality DST labels by the domain ontology.
 In our recent work~\cite{platek2016wochat}, we proposed alternative annotations of dialogue history which we describe in~Section~\ref{sec:experiments}.
 
@@ -122,10 +124,10 @@ Finally in Section~\ref{sec:discussion}, we review our work, discuss potential c
 
 \section{End-to-End Conversational Agents}
 \label{sec:e2end}
-End-to-end conversation agents is a~new appealing approach for building conversation agents.
-It reduces the task of building text-to-text dialogue system to training a single statistical model and thus which optimizes the response generation process jointly and thus avoid cumulating errors.
+Building end-to-end conversation agents is a~new appealing approach for building conversation agents.
+It reduces the task of building text-to-text dialogue system to training a single statistical model and thus optimizes the response generation process jointly and avoids cumulating errors.
 
-Neural networks dominate the first attempts~\cite{williams2016end,bordes_learning_2016,weston2015endtoend_prereq} to build conversational end-to-end systems.
+Neural networks dominate the first attempts~\cite{williams2016end,bordes_learning_2016,weston2015endtoend_prereq} to build end-to-end conversational systems.
 Using neural networks is an obvious choice because various neural network models achieve state-of-the-art results for optimizing traditional components of a dialogue system:
 \begin{itemize}
     \item language understanding (LU)~\cite{mairesse_spoken_2009} 
@@ -135,7 +137,8 @@ Using neural networks is an obvious choice because various neural network models
 \end{itemize}
 Neural networks models not only achieve the best results in all the mentioned tasks but the models are relatively straightforward to combine and optimize jointly.
 The key to successfully training a neural network is to provide enough labeled data since the neural network typically learns a lot of unspecified structure and patterns.
-Luckily, neural networks capture structures in data latently so no annotation of the data patterns is needed and one is able to collect data in much easier way.
+Luckily, neural networks capture structures of data easily so less features need to be handcrafted and more importantly a sequence of components can be replaced by a single statistical model.
+As consequence, the data for intermediate representation between the components does not to be provided for training the pipeline, but typically larger amount of the training examples is needed.
 
 \subsection{Data annotation and loss function}
 \label{sub:data_annotation}
@@ -157,16 +160,16 @@ The probability of action $ y_t $ is computed based on parameters for updating p
 \end{figure}
 
 In the work of~\cite{wen_networkbased_2016}, a neural end-to-end network model is trained for predicting a~next system reply from a dialogue history.
-The model is not trained only from dialogue conversation transcriptions and the domain DB but it uses annotations to speed up its learning.
-Its dialogue history is expressed as $h_t = y_1, x_1, s_1, y_2, \dot x_{t-1}, y_{t-1}, s_{t-1}, x_t, s_t $ where $s_t$ is the~annotation of dialogue state in form of dialogue state items e.g {\it inform(food=Chinese, price\_range=expensive, area=west)}.
+The model is trained not only from dialogue conversation transcriptions and the domain DB but also it uses dialogue state annotations for decomposing the system into multiple components.
+Its dialogue history is expressed as $h_t = y_1, x_1, s_1, y_2, \dot x_{t-1}, y_{t-1}, s_{t-1}, x_t, s_t $ where $s_t$ is the~annotation of dialogue state slots and their values e.g.\ {\it (food=Chinese, price\_range=expensive, area=west)}. 
 The work optimizes the model using supervised learning by maximizing likelihood of next word in a reply using cross-entropy training.
 
-Note that the cross-entropy training is the most successful method how to train neural networks, but maximizing likelihood of next word in response should not be the ultimate goal which conversational agents should achieve.
+Note that the cross-entropy training is the most successful method how to train neural networks.
+However, maximizing likelihood of next word in response should not be the ultimate goal which conversational agents should achieve.
 First, supervised approaches are limited by the~quality of the golden data.
 Second, the independence assumptions of generating next word from the hidden state are not true in dialogue.
 % Unfortunately, maximizing likelihood of the whole dialogue jointly is intractable because of data sparsity issues as the~number of possible sequences of replies in dialogue grows very fast for more and longer dialogues.
-Consequently, there is plenty room for improvement in modelling dialogue by end-to-end models.
-
+Consequently, there is plenty of room for improvement in modeling dialogue by end-to-end models.
 
 \subsubsection*{Maximum likelihood: current state}\label{sub:maximum_likelihood}
 Training neural networks for dialogue from gold labels using cross entropy for supervised learning brings several challenges
@@ -184,24 +187,24 @@ Training neural networks for dialogue from gold labels using cross entropy for s
 \subsubsection*{Weak supervision for reinforcement learning}\label{sub:batch_rl}
 
 In this section, we introduce reinforcement learning (RL) as a~tool of our choice for optimizing the evaluation/reward/loss function e.g.\ user satisfaction or mimicking the whole dialogue.
-Reinforcement learning is an~general framework for updating statistical model parameters even when a feedback for action the system is delayed or noisy~\cite{williams2016end,bahdanau_actor-critic_2016,wierstra_recurrent_2010}.
-In the field of dialogue systems, the RL was successfully used to optimize parameters of Gaussian processes used for selecting among several dozens of actions~\cite{gasic2011line}.
-On the other hand, using quite noisy feedback from a~few thousands of live conversation with user feedback at the end of dialogues is not convenient for training neural networks because they need to update a~large number of parameters and such feedback is too weak.
+Reinforcement learning is a~general framework for updating statistical model parameters even when a feedback for system's action is delayed or noisy~\cite{williams2016end,bahdanau_actor-critic_2016,wierstra_recurrent_2010}.
+In the field of dialogue systems, the RL was successfully used to optimize parameters of Gaussian processes for selecting among several dozens of actions~\cite{gasic2011line}.
+On the other hand, using relatively noisy feedback from a~few thousands of live conversations with user feedback at the end of dialogues is not convenient for training neural networks because they need to update a~large number of parameters and such feedback is too weak.
 
 Note that RL was successfully used with supervised cross-entropy pre-training and later optimizing for not differentiable loss function.~\cite{williams2016end}.
 However, such approach still uses the same labeled data and annotations as used for supervised learning.
-The advantage of this approach is that it is able to naturally capture by the reward functions multiple valid actions and optimize directly the evaluation function.
+The advantage of this approach is that it is able to naturally capture via the reward functions multiple valid actions and optimize directly the evaluation function.
 Furthermore, multiple weak reward functions can be combined to form much stronger feedback signal~\cite{abbeel_apprenticeship_2004}.
 
 Reinforcement learning performance quality depends on the reward information which can be used for updating parameters of the model and also on the amount of data available.
 Typically the reward is also used as a~scoring function for evaluating dialogues.
 However, if using the scoring function as reward function for reinforcement one would like to automate the computation, but only partial and not satisfactory automatic scoring functions were suggested~\cite{liu_how_2016,lowe_evaluation_2016} for dialogue systems. 
-Note also that some RL algorithms such as Sarsa are on-policy algorithms and need to be trained using life deployed systems.
+Note also that some RL algorithms such as Sarsa are on-policy algorithms and need to be trained using live deployed systems.
 We focus only on algorithms which can be used in off-policy settings~\cite{sutton_reinforcement_1998} and does not require deployed system for their training.
 
 \subsubsection*{Learning to collect feedback}\label{sub:irl}
-If using the reinforcement or supervised learning it is assumed that the loss function is provided before the training.
-One of key properties of dialogues systems is that their domain change over time~\cite{yu_evolvable_2016}, so every predefined loss function becomes obsolete after some time.
+The use of reinforcement or supervised learning assumes that the loss function is provided before the training.
+One of the key properties of dialogues systems is that their domains change over time~\cite{yu_evolvable_2016}, so every predefined loss function becomes obsolete after some time.
 In addition, specifying a good loss is notoriously hard since no standard measures for dialogue are widely accepted.
 
 Inverse reinforcement learning (IRL)\footnote{Also known as active reward learning~\cite{su2016active}.} is a task of learning the loss (or reward) function used in RL~\cite{abbeel_apprenticeship_2004}.
@@ -213,13 +216,13 @@ We describe alternative approaches of collecting explicit annotation in Section~
 Note, that collecting feedback explicitly for later use and IRL is not mutually exclusive.
 A~promising framework which may overcome vagueness of current system is adversarial networks, especially work of~\cite{dumoulin_adversarially_2016}\footnote{Picture is taken from \url{http://ishmaelbelghazi.github.io/ALI/}.}, which remotely resembles inverse reinforcement learning.
 The adversarially learned inference (ALI) model is a deep directed generative model which jointly learns a generation network and an inference network using an adversarial process. 
-The core idea is that one trains a generative model for dialogue system operator together with discriminator which attempts to recognize if generated dialogue is from the trained system or data sample from human (see Figure~\ref{fig:gan}).
+The core idea is that one trains a generative model for dialogue system operator together with discriminator which attempts to recognize whether a generated dialogue is from the trained system or data sample from human (see Figure~\ref{fig:gan}).
 
 \begin{figure}[htb]
     \centering
     \includegraphics[width=0.8\linewidth]{gan_simple}
     \caption{Adversarial Learned Inference core idea~\cite{dumoulin_adversarially_2016} is to train a discriminator and a generator as one network with two objectives. 
-    Discriminator separates real samples and generated samples and generator produce such artificial samples so that the discriminator cannot distinguish them from the real one.}
+    Discriminator separates real samples and generated samples and generator produce such artificial samples so that the discriminator cannot distinguish them from the real one. The algorithm was demonstrated on CIFAR image data-set and needs to be adapted for generating dialogues~\cite{krizhevsky_cifar-10_2014}.}
 \label{fig:gan}
 \end{figure}
 
@@ -250,7 +253,7 @@ The simplistic system~\cite{williams2016end} showed that it is possible to use A
 \section{Collecting Feedback}
 \label{sec:learn_feedback}
 Extracting feedback from dialogues is possible in several ways as described earlier: through fixed loss function, through learned loss function or explicitly through annotations.
-The feedback can be stored either explicitly as annotations or in parameters of the model which models the conversations.
+The feedback can be stored either explicitly as annotations or in parameters of the model.
 We focus on collecting explicit feedback because it can be exploited by any model via supervised or reinforcement learning.
 Nowadays, the interactive feedback from users is either ignored or stored only in parameters of statistical models e.g.\ neural networks.
 The crucial problem is that information represented in statistical models such as neural networks is notoriously hard to reuse for new architectures~\cite{oquab_learning_2014}.
@@ -264,7 +267,7 @@ We first describe our published works, then we introduce work in progress and fi
 
 \subsection{Published work}\label{sec:published}
 Our work so far has focused on developing an end-to-end task-oriented conversation agent on restaurant domain which is easy to train and provides a~reasonable baseline.
-First, in work~\cite{platek_recurrent_2016} we verified that we are able to train recurrent neural networks for dialogue state tracking and achieve near state-of-the-art easily. 
+First, we verified that we are able to train recurrent neural networks for dialogue state tracking and achieve near state-of-the-art easily~\cite{platek_recurrent_2016}. 
 We frame the DST as sequence-to-sequence problem and used encoder-decoder (see Figure~\ref{fig:dst_seq2seq}). 
 
 \begin{table*}[tb]
@@ -295,26 +298,26 @@ Model & Dev set & Test set\\
 \end{figure}
 
 Second, a dataset for training end-to-end system~\cite{platek2016wochat} was collected which focus on collecting easy-to-obtained annotations.
-The dataset was designed so human-to-human conversations are collected together with system's API calls to database.
+The dataset contains both human-to-human conversations and corresponding calls to database.
 The crowdsource workers, which play the role of the system, annotate their response additionally which row of database they have used for answering the user query (see~Figure~\ref{fig:apicall}).
-We argue that DB calls are much more natural and easy to obtain annotations both from crowdsourcing and from life-system. 
+We argue that DB calls are much more natural and easy to obtain annotations both from crowd-sourcing and from life-system. 
 
 \subsection{Work in progress}\label{sec:wip}
 
-We are currently working on a~end-to-end task-oriented system which can be optimized jointly.
-In contrast with very recent papers, our approach needs less annotations and doesn't use dialogue state labels as in~\cite{wen_networkbased_2016}, but it uses easier to obtain DB calls records~\cite{platek2016wochat}.
+We are currently working on an~end-to-end task-oriented system which can be optimized as single component.
+In contrast with very recent papers, our approach will hopefully need less annotations and doesn't use dialogue state labels as in~\cite{wen_networkbased_2016}, but it will use easier to obtain DB calls records~\cite{platek2016wochat}.
 
 A crucial problem of end-to-end statistical models for a dialogue system is that the dialogue agent performs latent actions which appear rather stochastically due to lack of training data, but the latent actions follow strict logic.
 The challenge for end-to-end models is to learn such logic in purely data-driven approach.
-An example of such (partially) latent actions are calls to database.\footnote{Any action of an agent can be transformed to a~database call because the dialogue system may delegate the task through the database to other services which execute the actions. Typical example is weather information service.}
-If a system is supposed to query a~database for information it is a partially latent action because the system presents only~the results of the action to the~user.
+An example of such (partially) latent actions are calls to database.\footnote{Any action of an agent can be transformed to a~database call because the dialogue system may delegate the task through the database to other services which execute the actions. Typical example is a~weather information service.}
+A system quering a~database to obtain some information is a partially latent action because the system presents only~the results of the action to the~user.
 However, the user without the access to system database is not able to distinguish if the system is providing a valid answer.
 The system for example may choose credible reply based based on its language model (see Figure~\ref{fig:encdec_lies}) which is plainly false.
 An example of completely latent action is if the~user ``{\it orders pizza}''.
 The system should insert the order into the reservation system represented in DB.
 However, the user can only hope that the system executed the correct action and has to continue in the conversation. 
 In the ``{\it pizza order}`` example, he or she happily waits at least 30 minutes for pizza delivery and if the dialogue system misunderstood the user and did not order the pizza, the user won't provide any feedback from which the system is able to learn.
-As a result, if one want to train a dialogue system one need to design objective function and data representations which force the latent action correspond to system replies, so the logic of the latent actions is maintained.
+As a result, if one wants to train a dialogue system one needs to design objective function and data representation which force the latent action correspond to system replies, so the logic of the latent actions is maintained.
 Unfortunately, the feedback that a DB call does not correspond to the system reply is often not available as demonstrated in our ``{\it pizza}'' example.
 
 \begin{figure*}[htb]
@@ -324,8 +327,8 @@ Unfortunately, the feedback that a DB call does not correspond to the system rep
 \label{fig:dai_gen}
 \end{figure*}
 
-Typically, the dialogue manager (DM) updates the dialogue state, presents the results of DB call and suggest NLG plan all represented in a~discrete format such as dialogue state items (DAIs) (see Figure~\ref{fig:dai_gen}).
-The DM policy executes operations on KB and produces a~NLG plan  which is compatible with KB actions~\cite{dusek_sequence2sequence_2016,young2010hidden}.
+Typically, the dialogue manager (DM) updates the dialogue state, presents the results of DB call and suggests an NLG plan - all represented in a~discrete format such as dialogue state items (DAIs) (see Figure~\ref{fig:dai_gen}).
+The DM policy executes operations on KB and produces an~NLG plan  which is compatible with KB actions~\cite{dusek_sequence2sequence_2016,young2010hidden}.
 An~alternative simplistic approach is presented in~\cite{wen_networkbased_2016} where a KB operation is executed or skipped based on the dialogue state also represented by DAIs but the NLG uses only the dialogue state and the result of KB operation to generate a~reply where the KB calls are reduced to simple select statement with single variable.
 We propose to predict directly which KB operation to use from the~hidden state $h_t$ of neural network which uses distributed representation and later predict the system reply.
 The advantage is that one does not need to handcraft additional layer for tracking the dialogue state.
@@ -492,8 +495,8 @@ We plan to run the experiment as pure Wizard of Oz experiment, and also using a~
 \end{figure*}
 
 \subsubsection*{Data augmentation through exploration}
-The last of the planned experiments investigates if our implementation of error recovery detection and our clarification strategies are robust enough to label and thus discover new valid actions for given dialogue history.
-The idea key idea is that in narrow domain task oriented system the dialogues tend to be repetitive.
+The last of the planned experiments investigates whether our implementation of error recovery detection and our clarification strategies are robust enough to label and thus discover new valid actions for given dialogue history.
+The idea key idea is that the dialogues tend to be repetitive in narrow domains of task oriented systems.
 The repetitiveness may not seem natural for human users, and also if one want to train end-to-end systems repetitive data makes the system not only also repetitive too but also less robust.\footnote{The system replies are not only used as targets but also as input features for the system next reply} 
 We want to mitigate the repetitiveness of the data by augmenting dialogues by paraphrases.
 
@@ -501,7 +504,7 @@ We will use the original repetitive conversations where the system has reasonabl
 If we do not detect misunderstanding in several cases of such new reply for given context, we will suppose we can include it as new data point. 
 The new conversations will be added to original dataset.
 We suppose that we want to improve an~end-to-end systems trained from conversational data such as described at Section~\ref{sec:e2end}.
-The system is able to produce alternatives for each predicted actions and also their confidence scores.
+The system is able to produce alternatives for each predicted action and also their confidence scores.
 Using the scores we may not choose the recommended action by the system, but our active learning algorithm will decide on the alternative.
 We will use coverage and precision of problematic situation described in~\cite{meena_datadriven_2016}.
 We plan to use ALI generation and discrimination algorithm described in~Section~\ref{sub:irl} which is suitable for over-generating several candidates.
@@ -509,9 +512,9 @@ We hope that discriminator will learn to distinguish the responses also on seman
 
 \subsubsection*{Data discovery through misunderstanding}
 Presenting incorrect information from DB to the users is a worth special attention.
-Every database is principally incomplete, and very quickly deprecates if the database contains information like bus stops, street names or telephone numbers which are all examples of entities used in most common task-oriented dialogue systems.
+Every database is in principle incomplete, and very quickly depreciates if the database contains information like bus stops, street names or telephone numbers which are all examples of entities used in most common task-oriented dialogue systems.
 Currently, we want to focus only on the incorrect or outdated information and not the missing information.
-We want to explore if user is able to detect that system answer does not match reality and also if it is able to provide the correct answer.
+We want to explore if a user is able to detect that system answer does not match reality and also if it is able to provide the correct answer.
 In this experiment, we will use crowd-source workers to correct some intentionally outdated information about restaurant domain in Cambridge.
 The interface displays just the dialogue history for the user and also the DB to the operator (see see~Figure~\ref{fig:wochat}).
 For this experiment, a user will not be only informed about restaurant using text system reply which may be outdated, but a leaflet with updated address, price range and menu will be presented to the user.
@@ -555,8 +558,8 @@ We would like to investigate its usefulness and compare it with current approach
 \label{sec:conclusion}
 We presented our work in progress, motivated our past and future experiments and discussed possible difficulties.
 Our experiments are mainly described as classification tasks where neural network statistical models will be used.
-We choose neural networks because they rather efficiently exploit labeled data but can be also fine-tuned with reinforcement retraining.
-However, our goal is to develop strategies which will help a conversational agent collect annotations and facts useful to any statistical inference algorithm.
+We choose neural networks because they not only efficiently exploit labeled data but also also can be fine-tuned with reinforcement training.
+Our goal is to develop strategies which will help a conversational agent collect annotations and facts useful to any statistical inference algorithm.
 
 \section*{Acknowledgments}
 This research was partly funded by the Ministry of Education, Youth and Sports of the Czech Republic under the grant agreement LK11221, core research funding, grant GAUK 1915/2015, and also partially supported by SVV project number 260 333. 
