@@ -364,7 +364,12 @@ We are especially interested in improving the semantic compatibility of the answ
 \begin{figure*}[ht]
     \centering
     \includegraphics[width=1.0\linewidth]{e2end_dbclassifiers}
-    \caption{We are currently working on a binary classifiers model which only focus on selecting the right named entities for the reply. We found out that selecting the right template is quite easy task in comparison.}
+    \caption{We are currently working on a binary classifiers model which only focus on selecting the right named entities for the reply. 
+    The binary classifier predicts if each the restaurant properties from each row should can be presented in the answer (see the grey column). 
+    Note that the input words and the database entities are represented as embeddings which are trained. 
+    The row embeddings are combined embeddings of embeddings of properties values where each property is stored in one column.
+    We found out that selecting the right template is quite easy task in comparison to providing the right entities to the template.
+    }
 \label{fig:e2end_entities}
 \end{figure*}
 
