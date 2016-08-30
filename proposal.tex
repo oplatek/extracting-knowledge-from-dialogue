@@ -265,7 +265,7 @@ We first describe our published works, then we introduce work in progress and fi
 \subsection{Published work}\label{sec:published}
 Our work so far has focused on developing an end-to-end task-oriented conversation agent on restaurant domain which is easy to train and provides a~reasonable baseline.
 First, in work~\cite{platek_recurrent_2016} we verified that we are able to train recurrent neural networks for dialogue state tracking and achieve near state-of-the-art easily. 
-We frame the DST as sequence-to-sequence problem and used encoder-decoder (see Figure~\ref{fig:dst_seq2seq}. 
+We frame the DST as sequence-to-sequence problem and used encoder-decoder (see Figure~\ref{fig:dst_seq2seq}). 
 
 \begin{table*}[tb]
 \begin{center}
@@ -528,8 +528,8 @@ However, the human effort put into building even narrow domain task oriented sys
 We present series of experiments which should study how such scalable approach is pushed even further by collecting annotation through interactions.
 In addition, the same methods can be used to extracting and updating knowledge from conversations which is almost unexplored direction how to extend dialogue system domain and knowledge.
 
-There is well established research direction of reducing the amount of labeled data needed by inverse reinforcement learning.
-The work of~\cite{nouri_cultural_2012} shows that.
+The inverse reinforcement learning (IRL) is well established research direction of reducing the need for labeled data~\cite{abbeel_apprenticeship_2004}.
+The work of~\cite{nouri_cultural_2012} uses successfully IRL for a toy task in cultural decision making in negotiations.
 More recently,~\cite{su2016active} described active reward learning using unsupervised neural network embeddings and Gaussian processes and managed greatly reduced the amount of data to deploy a system.
 The problem with active reward learning of particular architecture is that when the single neural network architecture deprecates the new system can use all the knowledge stored in the system parameters in a very limited way.
 Effectively, it means that only the same starting labeled data together with collected unlabeled data can be used for training new architectures. 
@@ -540,17 +540,15 @@ The work of~\cite{meena_datadriven_2016} analysed how to detect and recover also
 % \todo{Read and include work of~\cite{lopesspedial}.}
 However, the work primarily focused to discover errors offline and recommend designers which part of dialogues system needs more attention.
 
-The work of~\cite{pappu_knowledge_2014} detects errors over multiple components over multiple components and then employs post processing step.
+The work of~\cite{pappu_knowledge_2014} detects errors over multiple components and then employs post processing step which optimize the pipeline of components jointly.
 This attitude is no longer necessary because all our components are optimized jointly.
-However, the work shows interesting insights what might be the most common errors and also further uses error discovery for knowledge acquisition.
-The authors report interesting results especially on acquiring missing named entities and enriching the system knowledge base.
+However, the work shows interesting insights what might be the most common errors and it also uses an~error discovery for knowledge acquisition.
+The authors report promising results especially on acquiring missing named entities and enriching the system knowledge base.
 
-In our work, we want to follow up on their results, integrate our strategies to fully trainable system and the most importantly not only learn new facts to directly used in following conversation with user but act as annotations for improving the system itself after retraining.
-To our knowledge no other work described a dialogue system stores user reward signal in explicit form, aka annotations, for its later optimization.
-We would like to investigate its usefulness and compare it with current promising approaches active reward learning~\cite{su2016active} and 
-zero-shot learning~\cite{vinyals_matching_2016} which are possible approaches how to exploit users immediate feedback.
-Active reward learning tries to induce better latent representation for capturing the reward so the reward is more easily extracted from the dialogue history.
-The zero-shot learning applies encoded prior information to extremely efficiently use few data samples provided in the user feedback.
+In our work, we want to follow up on their results, integrate our strategies to fully trainable system. 
+The most importantly, we want collect annotations for improving the system itself in addition to learning new facts to directly.
+To our knowledge no other work described a dialogue system which stores user reward signal in explicit form, aka annotations, for its later optimization.
+We would like to investigate its usefulness and compare it with current approaches such as active reward learning~\cite{su2016active} and zero-shot learning~\cite{vinyals_matching_2016}.\footnote{The zero-shot learning applies encoded prior information to extremely efficiently use few data samples provided in the user feedback.}
 
 
 \section{Conclusion}
