@@ -60,7 +60,7 @@
 \maketitle
 \begin{abstract}
 Building a conversation agent is a demanding process which is typically simplified by using narrow fixed conversation domain.
-The most effective approaches either use use a~very weak feedback and improve deployed dialog system via reinforcement learning or use supervised learning and labeled data.
+The most effective approaches either use use a~very weak feedback and improve deployed dialogue system via reinforcement learning or use supervised learning and labeled data.
 This work build on the success of mentioned methods but focus on designing the conversational agents which will be able to:
 \begin{itemize}
     \item collect explicit annotation interactively during the dialogue,
@@ -93,8 +93,8 @@ Dialogue state tracking probabilistically represents user's goal in predefined f
 The~DST representation is evaluated by easy to understand and widely accepted measures such as accuracy and L2 measure.\footnote{DSTC2 and DSTC3 challenges recommend using accuracy and L2 measures. In addition, one is advised not to evaluate the dialogue state trackers on the first turns where the dialogue state does not change.}
 The improvements of dialogue state trackers enable more informed and thus better action selection which is the ultimate goal of a dialogue system.
 
-% Most of the dialog state trackers submitted to DSTC1, DSTC2 and DSTC3 used supervised learning to estimate the probabilities of dialogue state for given history\footnote{With the notable exception of~\cite{zilka_incremental_2015} tracker which perform simple Bayesian update without any learning and still achieves competitive results.}
-As a result of the DST challenge success, the dialog state tracking specified by manually designed ontology was widely adopted as it was used in the DST challenges.
+% Most of the dialogue state trackers submitted to DSTC1, DSTC2 and DSTC3 used supervised learning to estimate the probabilities of dialogue state for given history\footnote{With the notable exception of~\cite{zilka_incremental_2015} tracker which perform simple Bayesian update without any learning and still achieves competitive results.}
+As a result of the DST challenge success, the dialogue state tracking specified by manually designed ontology was widely adopted as it was used in the DST challenges.
 In general, we see the manually designed ontology as arbitrary, costly and also error prone process.\footnote{The Cambridge restaurant ontology was polished over several years of research and it is actually rather simple.}
 Recently, it was shown by~\cite{wen_networkbased_2016} that the dialogue state annotations are the single annotations in additions to conversation transcriptions needed for training end-to-end system jointly, so it became even more important to specify high-quality DST labels by the domain ontology.
 In our recent work~\cite{platek2016wochat}, we proposed alternative annotations of dialogue history which we describe in~Section~\ref{sec:experiments}.
@@ -262,7 +262,7 @@ Our work has focused on building an end-to-end conversation agent which eliminat
 
 We first describe our published works, then we introduce work in progress and finally we propose future work in the next Section~\ref{sec:future}. 
 
-\subsection{Published work}
+\subsection{Published work}\label{sec:published}
 Our work so far has focused on developing an end-to-end task-oriented conversation agent on restaurant domain which is easy to train and provides a~reasonable baseline.
 First, in work~\cite{platek_recurrent_2016} we verified that we are able to train recurrent neural networks for dialogue state tracking and achieve near state-of-the-art easily. 
 We frame the DST as sequence-to-sequence problem and used encoder-decoder (see Figure~\ref{fig:dst_seq2seq}. 
@@ -324,7 +324,7 @@ Unfortunately, the feedback that a DB call does not correspond to the system rep
 \label{fig:dai_gen}
 \end{figure*}
 
-Typically, the dialog manager (DM) updates the dialogue state, presents the results of DB call and suggest NLG plan all represented in a~discrete format such as dialogue state items (DAIs) (see Figure~\ref{fig:dai_gen}).
+Typically, the dialogue manager (DM) updates the dialogue state, presents the results of DB call and suggest NLG plan all represented in a~discrete format such as dialogue state items (DAIs) (see Figure~\ref{fig:dai_gen}).
 The DM policy executes operations on KB and produces a~NLG plan  which is compatible with KB actions~\cite{dusek_sequence2sequence_2016,young2010hidden}.
 An~alternative simplistic approach is presented in~\cite{wen_networkbased_2016} where a KB operation is executed or skipped based on the dialogue state also represented by DAIs but the NLG uses only the dialogue state and the result of KB operation to generate a~reply where the KB calls are reduced to simple select statement with single variable.
 We propose to predict directly which KB operation to use from the~hidden state $h_t$ of neural network which uses distributed representation and later predict the system reply.
@@ -394,30 +394,40 @@ We suggest following experiments to explore the crucial problems which need to b
 The experiments are designed as a proof of concept on a~narrow domain and scaling up to larger or multiple domains are left for future work or as obvious extensions. 
 
 \subsubsection*{Easy first decoding for dialogue state tracking using reinforce algorithm}
-We show in work~\cite{platek_recurrent_2016} that modeling DST as sequence-to-sequence captures correlation between dialogue state values and also does nut suffer much from data sparsity.
-However, the order of the dialog state labels is arbitrary chosen and may not be optimal for prediction dialogue state.
+We show in work~\cite{platek_recurrent_2016} that modeling DST as sequence-to-sequence is easy-to-deploy, captures correlation between dialogue state values and also does nut suffer much from data sparsity.
+However, the order of the dialogue state labels is arbitrary chosen and may not be optimal for prediction dialogue state.
 In this experiment, we rephrase the DST task as a~sequence-to-set model by employing loss function which prefers if three hypotheses labels match the set of gold labels $\{food\_type, area, price\_range\}_{hypotheses} = \{food\_type, area, price\_range\}_{gold}$.
-Such loss function is in sharp contrast with combined cross-entropy loss maximizing probability true labels in order food, area and price range.
+Such loss function is in sharp contrast with combined cross-entropy loss maximizing probability true labels in order food, area and price range which is used in sequence-to-sequence approach.
 The sequence-to-set loss function is not smooth and cannot be differentiated, but we will use reinforce algorithm~\cite{williams_simple_1992} to update the model parameters.
 We plan to pre-trained the model with cross-entropy updates and later fine tuned the weights with a~reinforce training.
 % We do not plan to use the reinforce algorithm for tis less stable if one try to use larger steps size e.g. by AdaDelta algorithm~\cite{adadelta} as used for cross-entropy training.
-Given the same model and the same number of parameters we expect the model trained with the reinforce algorithm to perform better than a~cross-entropy training with early stopping because we will directly optimize the evaluation function.
+Given the same model and the same number of parameters we expect the model trained with the reinforce algorithm to perform better than a~cross-entropy training with early stopping.
+We assume that the reinforce algorithm will benefit from directly optimizing the evaluation function.
 In addition, it will be interesting to explore which permutation of slots is best to use for DSTC2 dataset and if the best permutation differs for each dialogue.
 Using the reinforce algorithm on well pre-trained model we want to examine if easy-first decoding of slots can perform better than arbitrary chosen order of predictions. 
 
-\subsubsection*{Discovering hidden database calls}
-The dialogue system generates two kinds of actions; responses and calls to database.
+\subsubsection*{Discovering the database queries}
+The dialogue system generates two kinds of actions; responses and calls to its database.
 The calls to the database influence the system replies in future turns by presenting their results or by changing results of next database calls.
-This experiment focuses on such DB calls which results are at least partially presented to the user in the next reply.
+This experiment focuses on discovering the database calls which should be used for querying the database from human-human conversations.
 
 Even if the DB results are immediately presented the database operations are not obvious.  
-The first example in Figure~\ref{fig:apicall} demonstrates that the system presents one of possible results of the DB call to the user.
+The first example in Figure~\ref{fig:apicall} demonstrates that the system presents only one of possible results of the DB call to the user.
 In the second example, the system replies the single possible answer {\it in the west part} to the query {\it select restaurant.area where name="India house"}.
-However, in the second example the same result can be obtained by many similar queries where name is replaced by $x=\{travellers\ rest, la\ margherita, \ldots\}$ in query {\it select restaurant.area where name="$x$"}.
+However, the same result can be obtained by many other queries where the~name is replaced by other restaurants; $x=\{travellers\ rest, la\ margherita, \ldots\}$ all of them from west part of the city.
+As a result, discovering only the queries which makes sense from human perspective is challenging 
+
 We formulate the task as a classification problem where the classifier assign high probability to DB calls which are able to produce results compatible with the system reply and ideally the highest probability should be given the DB call intended by the user.
 
-The evaluation criteria for experiment are if the system replied with valid property and if the DB call used the property from entity which is valid given the history.
-We plan to use for evaluation the dataset collected in work~\cite{platek2016wochat} where if the entity is valid given the history the DB call is unambiguous. 
+We propose to use the automatic and objective evaluation criteria. 
+Namely, we will check if:
+\begin{itemize}
+    \item the system replies with valid property,
+    \item the arguments of the DB call are present in the dialogue history.
+    \item the gold answer is in the result of the DB call.
+\end{itemize}
+We will evaluate our classifier on the dataset collected in work~\cite{platek2016wochat} where if the entity is valid given the history the DB call is unambiguous. 
+In addition, we would like to compare it human judgement on portion of the data.
 \begin{figure}[!ht]
     \dots \\
     \usr{I would like a Chinese restaurant} \\
@@ -429,13 +439,13 @@ We plan to use for evaluation the dataset collected in work~\cite{platek2016woch
     \dots \\
     \usr{Where is of the India house restaurant located?}
     \api{select restaurant.area where name="India house"}
-    \sys{The India house is located in the west part of the city.}
+    \sys{It is located in the west part of the city.}
     \caption{Dialogue example with latent calls to system's DB.}
-    \label{fig:apicall}
+\label{fig:apicall}
 \end{figure}
 
 \subsubsection*{End-to-end system for consistent DB calls and system replies}
-In this experiment, we plan to evaluate end-to-end system which is an extension over the previous experiment which should provide us with reasonable accuracy of selecting the right database call.
+In this experiment, we will evaluate the extension of end-to-end system from Section~\ref{sec:wip} which should provide us with reasonable accuracy of selecting the right database call results.
 We plan to frame the NLG part of the system as classification task of predefined templates for its simplicity.
 The overall system (see Figure~\ref{fig:wochat}) will predict at each turn the DB call and a~template.
 The template will have placeholders for the DB call arguments and most importantly for the DB call result.\footnote{Implicit confirmation by repeating the arguments is a~common strategy for grounding~\cite{meena_crowdsourcing_2014}.}
@@ -443,27 +453,25 @@ The template will have placeholders for the DB call arguments and most important
 The evaluation will remain the same for choosing the right DB call and its result, the NLG part will be evaluated using accuracy on the golden data from~\cite{platek2016wochat} dataset and also using consistency with DB call and convenience for the dialogue history.
 Accuracy evaluated with respect to the golden data is a rather strict criterion, because it may penalize valid responses unseen in the dataset, so we also try to account for other possibilities.
 Consistency with DB call results, i.e.\ checking that the arguments of the templates are compatible with golden/predicted DB call, is only necessary requirement for valid template to hold, so it is only a weak measure.
-We plan to validate if a template is convenient reply for given history by crowdsourcing.
-We hope that limited number of templates will enable easier quantifications.
+Consequently, we plan to validate if a template is convenient reply for given history by crowdsourcing.
 
 \subsubsection*{Misunderstandings data collection}
 We assume that error handling is relatively frequent, one should be able to detect it and recover from it~\cite{skantze_error_2007}.
 % \todo{mention early error detection}
 In contrast, to~\cite{skantze_error_2007} who focused on ASR errors we focus on following sources of errors which lead to misunderstanding:
 \begin{itemize}
-    \item out-of-domain user query and inappropriate system reply,
-    \item ambiguity in context where user use one interpretation and the system the other,
+    \item out-of-domain or out-of-application user query and inappropriate system reply,
+    \item ambiguity in the context where one interpretation is intended by the user and the system choose the other one,
     \item poor action selection of reply or DB call for given history context.
 \end{itemize}
-First, we propose to use a special reply for out-of-domain user queries which explains users that his query is out-of-domain and presents system's domain.~\cite{platek_self_2015}
+First, we propose to use a special reply for out-of-domain user queries which explains users that his query is out-of-domain and presents system's domain and possibilities.~\cite{platek_self_2015}
 With such strategy for handling out-of-domain queries and the errors when system does not inform about its skills, we see the action selection of another reply as an error for given dialogue history.
 If the misunderstanding is not cause by out-of-domain query the system response may be plainly false for all cases or the user is aware that the system reply might be valid answer, but wants another one.
 
-In this experiment we want to first evaluate how good are we able to detect misunderstanding and second how well are we able to recover in the dialog. 
-We especially want to focus on the misunderstanding detection at the beginning.
+In this experiment we want to first evaluate how good are we able to detect misunderstanding and second how well are we able to recover from it in the live dialogue. 
+We especially want to focus on the early misunderstanding detection.
 We will use the dataset prepared in work~\cite{platek2016wochat} for dialogues without any misunderstanding.
-Later, we will artificially introduce misunderstandings.
-We will artificially introduce incorrect system replies to certain dialogue histories and we will collect new continuation of the dialogues after the intentionally introduced nonsensical system reply. 
+Later, we will artificially introduce incorrect system replies to certain dialogue histories and we will collect new continuation of the dialogues after the intentionally introduced nonsensical system reply. 
 We will also ask users to select the most convenient part of the dialogue where to place an out-of-domain question which they are interested about.
 Again we will collect new follow up conversations and see how humans handle out-of-domain questions about which they do not know any information.
 We will evaluate accuracy of classifying turns (pair of system and user utterance) into three categories:
@@ -486,7 +494,7 @@ We plan to run the experiment as pure Wizard of Oz experiment, and also using a~
 \subsubsection*{Data augmentation through exploration}
 The last of the planned experiments investigates if our implementation of error recovery detection and our clarification strategies are robust enough to label and thus discover new valid actions for given dialogue history.
 The idea key idea is that in narrow domain task oriented system the dialogues tend to be repetitive.
-The repetitiveness may not seem natural for human users, and also if one want to train end-to-end systems repetitive data makes the system not only also repetitive but also less robust. 
+The repetitiveness may not seem natural for human users, and also if one want to train end-to-end systems repetitive data makes the system not only also repetitive too but also less robust.\footnote{The system replies are not only used as targets but also as input features for the system next reply} 
 We want to mitigate the repetitiveness of the data by augmenting dialogues by paraphrases.
 
 We will use the original repetitive conversations where the system has reasonable confidence of its action to intentionally slightly change the system reply.
@@ -500,17 +508,16 @@ We plan to use ALI generation and discrimination algorithm described in~Section~
 We hope that discriminator will learn to distinguish the responses also on semantic level of the system's domain which current approaches mostly ignore. 
 
 \subsubsection*{Data discovery through misunderstanding}
-A special case of misunderstanding which is worth attention is presenting incorrect information from DB to the users.
-One example may be missing, outdated or incorrect piece of information in the DB.
-Currently, we want to focus only on the incorrectly or outdated information when the user knows the correct answer.
+Presenting incorrect information from DB to the users is a worth special attention.
+Every database is principally incomplete, and very quickly deprecates if the database contains information like bus stops, street names or telephone numbers which are all examples of entities used in most common task-oriented dialogue systems.
+Currently, we want to focus only on the incorrect or outdated information and not the missing information.
 We want to explore if user is able to detect that system answer does not match reality and also if it is able to provide the correct answer.
-In this experiment we will use crowd-source workers to correct some intentionally outdated information about restaurant domain in Cambridge.
+In this experiment, we will use crowd-source workers to correct some intentionally outdated information about restaurant domain in Cambridge.
 The interface displays just the dialogue history for the user and also the DB to the operator (see see~Figure~\ref{fig:wochat}).
 For this experiment, a user will not be only informed about restaurant using text system reply which may be outdated, but a leaflet with updated address, price range and menu will be presented to the user.
 The user will be instructed to tell the system that it is providing incorrect information.
 We will investigate how often the user notice the mismatch between the information provided and the true state presented in the leaflet.
 Second, we will evaluate how accurately our system is able to detect that user is correcting its information and how the system is able to parse the information from users answers.
-
 
 
 \section{Discussion}
@@ -539,7 +546,7 @@ However, the work shows interesting insights what might be the most common error
 The authors report interesting results especially on acquiring missing named entities and enriching the system knowledge base.
 
 In our work, we want to follow up on their results, integrate our strategies to fully trainable system and the most importantly not only learn new facts to directly used in following conversation with user but act as annotations for improving the system itself after retraining.
-To our knowledge no other work described a dialog system stores user reward signal in explicit form, aka annotations, for its later optimization.
+To our knowledge no other work described a dialogue system stores user reward signal in explicit form, aka annotations, for its later optimization.
 We would like to investigate its usefulness and compare it with current promising approaches active reward learning~\cite{su2016active} and 
 zero-shot learning~\cite{vinyals_matching_2016} which are possible approaches how to exploit users immediate feedback.
 Active reward learning tries to induce better latent representation for capturing the reward so the reward is more easily extracted from the dialogue history.
