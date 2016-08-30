@@ -211,18 +211,17 @@ In our future work (see~Section~\ref{sec:future}) we aim to learn feedback from 
 We describe alternative approaches of collecting explicit annotation in Section~\ref{sec:learn_feedback}.
 
 Note, that collecting feedback explicitly for later use and IRL is not mutually exclusive.
-A~promising framework which may overcome vagueness of current system is adversarial networks, especially work of~\cite{dumoulin_adversarially_2016}, which remotely resembles inverse reinforcement learning.
+A~promising framework which may overcome vagueness of current system is adversarial networks, especially work of~\cite{dumoulin_adversarially_2016}\footnote{Picture is taken from \url{http://ishmaelbelghazi.github.io/ALI/}.}, which remotely resembles inverse reinforcement learning.
 The adversarially learned inference (ALI) model is a deep directed generative model which jointly learns a generation network and an inference network using an adversarial process. 
 The core idea is that one trains a generative model for dialogue system operator together with discriminator which attempts to recognize if generated dialogue is from the trained system or data sample from human (see Figure~\ref{fig:gan}).
 
 \begin{figure}[htb]
     \centering
     \includegraphics[width=0.8\linewidth]{gan_simple}
-    \caption{Adversarial Learned Inference core idea~\cite{dumoulin_adversarially_2016}.\footnote{Picture taken from \url{https://ishmaelbelghazi.github.io/ALI/} website.} is to train a discriminator and a generator as one network with two objectives. 
+    \caption{Adversarial Learned Inference core idea~\cite{dumoulin_adversarially_2016} is to train a discriminator and a generator as one network with two objectives. 
     Discriminator separates real samples and generated samples and generator produce such artificial samples so that the discriminator cannot distinguish them from the real one.}
 \label{fig:gan}
 \end{figure}
-\todo{Why the footnote (?6?) is not visible?}
 
 We are also interested in this approach because one should be able to see which positive examples contributed the most for the performance of the generator (the dialogue system) by exploring the error updates and performance of the discriminator.
 Thus the discriminator could provide us with automatic annotations. 
