@@ -325,12 +325,12 @@ Unfortunately, the feedback that a DB call does not correspond to the system rep
 \end{figure*}
 
 Typically, the dialog manager (DM) updates the dialogue state, presents the results of DB call and suggest NLG plan all represented in a~discrete format such as dialogue state items (DAIs) (see Figure~\ref{fig:dai_gen}).
-The policy DM executes operations on KB and produces a~NLG plan  which is compatible with KB actions~\cite{dusek_sequence2sequence_2016,young2010hidden}.
-An~alternative approach is presented in a~simplistic form in~\cite{wen_networkbased_2016} where a KB operation is executed or skipped based on the dialogue state also represented by DAIs but the NLG uses only the dialogue state and the result of KB operation to generate a~reply.
+The DM policy executes operations on KB and produces a~NLG plan  which is compatible with KB actions~\cite{dusek_sequence2sequence_2016,young2010hidden}.
+An~alternative simplistic approach is presented in~\cite{wen_networkbased_2016} where a KB operation is executed or skipped based on the dialogue state also represented by DAIs but the NLG uses only the dialogue state and the result of KB operation to generate a~reply where the KB calls are reduced to simple select statement with single variable.
 We propose to predict directly which KB operation to use from the~hidden state $h_t$ of neural network which uses distributed representation and later predict the system reply.
 The advantage is that one does not need to handcraft additional layer for tracking the dialogue state.
-The reply will be predicted conditioned on the selected KB call's result and the same state $h_t$ state and will be generated in word by word manner.
-Such model needs to be trained so the model replies match the model's KB calls, but it allows flexibility how to communicate about the KB calls and their results.
+In our approach, the predicted reply is conditioned on the selected KB call's result and the same state $h_t$ state and will be generated in word by word manner.
+Such model needs to be trained so the replies match the KB calls, but it allows flexibility how to communicate about the KB calls and their results.
 We conditioned the reply based on the KB call and not vice versa, because we want the system to describe which action is actually used. 
 
 Experiments with our first model showed that we have too few data and our model is too complicated to learn anything meaningful on the~DSTC2 dataset.
