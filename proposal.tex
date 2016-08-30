@@ -300,10 +300,10 @@ The dataset was designed so human-to-human conversations are collected together 
 The crowdsource workers, which play the role of the system, annotate their response additionally which row of database they have used for answering the user query (see~Figure~\ref{fig:apicall}).
 We argue that DB calls are much more natural and easy to obtain annotations both from crowdsourcing and from life-system. 
 
-\subsection{Work in progress}
+\subsection{Work in progress}\label{sec:wip}
 
 We are still working on a~end-to-end system which can be optimized jointly.
-In contrast, with very recent papers our approach will need much less annotation and won't use dialogue state labels as in~\cite{wen_networkbased_2016}, but DB calls as described earlier.
+In contrast, with very recent papers our approach will need much less annotation and won't use dialogue state labels as in~\cite{wen_networkbased_2016}, but it will use DB calls as described earlier.
 
 A crucial problem of end-to-end statistical models for a dialogue system is that the dialogue agent performs latent actions which appear rather stochastically due to lack of training data.
 However, the latent actions follow strict logic.
@@ -311,9 +311,10 @@ An example of such (partially) latent actions are calls to database.\footnote{An
 If a system is supposed to query a~database for information it is a partially latent action because the system presents only~the results of the action to the~user.
 However, the user can not distinguish if the system is providing similar answer without accessing the database e.g.~choosing a~reasonable but incorrect answer based on the language model.
 An example of completely latent action is if the~user ``{\it orders pizza}''.
-The system should access the database and create and entry to database.
+The system should access the database and create and entry to database based on which the order is inserted into the reservation system.
 However, the user typically only suppose that the system executed the correct action and in the ``{\it pizza order}`` example he or she happily waits at least 30 minutes for pizza delivery\footnote{If the dialogue system misunderstood the user and did not order the pizza, the user won't provide any feedback which the system is able to process}.
-As a result if one want to train a dialogue system one need to design objective function and data representations which force the latent action correspond to system replies, so the logic of the latent actions is maintained.
+As a result, if one want to train a dialogue system one need to design objective function and data representations which force the latent action correspond to system replies, so the logic of the latent actions is maintained.
+Unfortunately, the feedback that a DB call does not correspond to the system reply is often not available as seen in our ``{\it pizza}'' example.
 
 \begin{figure*}[htb]
     \centering
@@ -323,24 +324,26 @@ As a result if one want to train a dialogue system one need to design objective 
 \end{figure*}
 
 A common approach is to use dialog state tracking for updating the dialogue state represented in a~discrete form such as dialogue state items (see Figure~\ref{fig:dai_gen}) and a dialogue policy which executes operations on KB and produces a~plan for NLG what to say which is compatible with KB actions~\cite{dusek_sequence2sequence_2016,young2010hidden}.
-An~alternative approach is presented in a~simplistic form in~\cite{wen_networkbased_2016} where a KB operation is executed or skipped based on the dialogue state but the NLG uses the only the dialogue state and the result of KB operation to generate a~reply.
+An~alternative approach is presented in a~simplistic form in~\cite{wen_networkbased_2016} where a KB operation is executed or skipped based on the dialogue state but the NLG uses only the dialogue state and the result of KB operation to generate a~reply.
 We propose to predict directly which KB operation to use from the~hidden state $h_t$ of neural network and later predict the system reply.
 The reply will be predicted conditioned on the selected KB call's result and the same state $h_t$ state and will be generated in word by word manner.
-Such model needs to be trained so the KB actions match the model's replies but it allows flexibility how to communicate about system actions.
+Such model needs to be trained so the model replies match the model's KB calls, but it allows flexibility how to communicate about the KB calls and their results.
+We conditioned the reply based on the KB call and not vice versa, because we want the system to describe which action is actually used. 
 
-Our first experiments showed that we have too few data and our model is too complicated to learn anything meaningful. 
-We used the DSTC2 dataset and we tried to mimic the system behaviour.
-We heuristic function to simulate DB calls as collected in work of~\cite{platek2016wochat} as input features and which showed promising results in~\cite{platek_recurrent_2016}. 
+Experiments with our first model showed that we have too few data and our model is too complicated to learn anything meaningful on DSTC2 dataset.
+In the experiment, we used the DSTC2 dataset and we tried to mimic the system replies given the dialogue history and the DB of restaurants for the DSTC2 restaurant domain.
+We design a heuristic function to create annotations in form of DB calls to simulate human annotation as described in~\cite{platek2016wochat}.
+We used the DB calls as input features because they showed promising results in~\cite{platek_recurrent_2016} for DST.
 Unfortunately, our model was not able to learn correlation between dialogue history inputs, content of the database and the systems replies.
-It effectively produces sophisticated lies mimicking the systems replies and randomly choosing facts from database.
-Consider example from Figure~\ref{fig:encdec_lies} where both plain encoder-decoder and our propose models made same type of mistakes.
+It produces only sophisticated lies mimicking the systems replies and randomly choosing facts from database.
+Consider example from Figure~\ref{fig:encdec_lies} where both plain encoder-decoder and our propose model decoded the same incorrect reply.
 Our informal experiments showed that encoder-decoder is able to produce the exact template on DSTC2 dataset in over than 30 \% cases without checking the right named entities.
 Additionally on small manually checked subset of 100 replies from DSTC2 test set, we find out that over 73 \% templates are convenient but they differ only in incorrectly used named entities such telephone number as demonstrated in~Figure~\ref{fig:encdec_lies}.
 \begin{figure}[!ht]
     {\bf input:} {\it anatolia serves turkish food in the moderate price range what is the phone number and address} \\
     {\bf decoded:} {\it The phone number of {\bf meghna} is {\bf 01223 727410} . EOS} \\
     {\bf target:} {\it The phone number of anatolia is {\bf 01223 362372} and it is on 30 Bridge Street City Centre . EOS } \\
-    \caption{For encoder-decoder framework is easy to learn templates but hard to extract semantic information from the query and the system database. Note, that the decoded reply produced telephone number but from completely different restaurant (not even the one called {\bf meghna}).}
+    \caption{For encoder-decoder framework is easy to learn templates but hard to extract semantic information from the query and the system database. Note, that the decoded reply produced telephone number but of a~completely different restaurant (not even the one called {\bf meghna}).}
 \label{fig:encdec_lies}
 \end{figure}
 
@@ -348,19 +351,19 @@ We found out that our model learned to ignore the database part of the model and
 We blame mainly huge ambiguity in the data and not enough training examples in the DSTC2 dataset so the model cannot learn the abstraction for representing constraints provided in the history for selecting the right row. 
 \begin{figure*}[!bt]
     \centering
-    \includegraphics[width=1.0\linewidth]{todo}
-    \caption{Computational graph of neural network model which demonstrates conditioning on the database part was completely ignored by the trained model.}
+    \includegraphics[width=1.0\linewidth]{encdecdb}
+    \caption{Computational graph of neural network model which demonstrates that conditioning on the database part was completely ignored by the trained model. We hoped that the attention will combine the information from the KB graph and the last hidden state $h_T$, but it put weight only on the last hidden state $h_t$ for all words as depicted by the yellow colour representing the last hidden state $h_t$. The output of the KB computation was an weighted embedding of rows of the database similarly as represented in Figure~\ref{fig:e2end_entities}.}
 \label{fig:e2end_fail}
 \end{figure*}
 
-We aim to solve the problem by simplifying the model and learn to predict each row of database directly, basically as set of binary classifiers. 
-The advantage is that such architecture allows for multiple possible results which are typical for user queries.
-As consequence each dialogue history and corresponding system reply training example will be expanded using heuristic functions to many possible replies given the history and the system will be taught by more examples.
-We expect that by explicitly preparing the model for the data ambiguity the model will generalize better and learn to propagate constraints from history over database to results which will be semantically more accurate.
-We are able to measure automatically the semantic compatibility based on the dialogue state annotation from DSTC2 data or DB calls in the dataset~\cite{platek2016wochat}.
+We aim to solve the problem by simplifying the model and learn to predict each row of database directly, predicting for each row of the DB by a binary classifier if it will appear in the database call results. 
+The advantage is that such architecture allows for multiple possible results which are typical for user queries and it can be easily trained directly using supervised learning if we prepare annotations using simple heuristics or later to be fine-tuned with reinforcement learning.
+As a side effect, each dialogue history and corresponding system reply training example will be expanded using heuristic functions to many possible replies over possible DB call results.
+We expect that by explicitly modelling the data ambiguity the trained classifier will generalize better and finally learn to propagate constraints from history over database to results which will be semantically more accurate.
+We are especially interested in improving the semantic compatibility of the answer which we measure based on the dialogue state annotation from DSTC2 data or DB calls in the dataset~\cite{platek2016wochat} as recall and accuracy.
 \begin{figure*}[ht]
     \centering
-    \includegraphics[width=1.0\linewidth]{todo}
+    \includegraphics[width=1.0\linewidth]{e2end_dbclassifiers}
     \caption{We are currently working on a binary classifiers model which only focus on selecting the right named entities for the reply. We found out that selecting the right template is quite easy task in comparison.}
 \label{fig:e2end_entities}
 \end{figure*}
@@ -368,8 +371,11 @@ We are able to measure automatically the semantic compatibility based on the dia
 
 \section{Future work}\label{sec:future}
 
-Next, we will not only on optimizing action selection process of a~dialogue system, but we will also attempt to learn new facts and thus perform more informed decisions.
-By introducing an end-to-end system that collects annotations which are used for its retraining we aim at reducing both the expert work and annotated data needed for launching such agent.
+Most of the current research focus on reducing handcrafted components from the dialogue system architectures.
+A successful approach is to built an end-to-end system using neural networks which we introduced in~Section{sec:e2end} and proposed improvements in Section~\ref{sec:wip}. 
+However, the most popular approaches require a lot of data ideally annotated.
+We suggest that a system should collects annotations which are used for its retraining we aim at reducing both the expert work and annotated data needed for launching such agent.
+Next, we will not only try to optimize action selection process of a~dialogue system, but we will also attempt to learn new facts and thus perform more informed decisions.
 At the same time, such agent improves its performance by live interactions with users and the annotations may be helpful for adapting to a new domain.
 
 We suggest following experiments to explore the crucial problems which need to be solved before a conversational agent is able to extract information through interaction and later used them for self-improvement.
@@ -462,7 +468,7 @@ We plan to run the experiment as pure Wizard of Oz experiment, and also using a~
     \centering
     \includegraphics[width=1.0\linewidth]{gui-annotators-system}
     \caption{End-to-end system data collection interface}
-    \label{fig:wochat}
+\label{fig:wochat}
 \end{figure*}
 
 \subsubsection*{Data augmentation through exploration}
@@ -480,18 +486,6 @@ Using the scores we may not choose the recommended action by the system, but our
 We will use coverage and precision of problematic situation described in~\cite{meena_datadriven_2016}.
 We plan to use ALI generation and discrimination algorithm described in~Section~\ref{sub:irl} which is suitable for over-generating several candidates.
 We hope that discriminator will learn to distinguish the responses also on semantic level of the system's domain which current approaches mostly ignore. 
-% \todo{Which framework will we use for suggesting alternatives 1. active learning framework with variables - failure of following dialogue - number of such history context seen - confidence of alternatives?}
-% features from Raveesh Thesis 
-%  - utterance similarity - cosine distance 
-%  - disconfirmation - no/not presenece
-%  - corrections arguments for API call changed (is it the same API call?)
-%  - change of topic
-%       - expected API call in previous turn
-%       - number of changed arguments
-%       - cosine distance from previous API call
-% unweighted average recall
-% for each domain experiment how many users need for estimating ground truth reliably
-
 
 \subsubsection*{Data discovery through misunderstanding}
 A special case of misunderstanding which is worth attention is presenting incorrect information from DB to the users.

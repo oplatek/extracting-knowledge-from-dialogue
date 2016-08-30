@@ -47,4 +47,14 @@ echo "Open http://localhost:4000"
 
 ### TODOS
 - fill urls to bibtex entries so one can easily browse the articles
+\todo{Which framework will we use for suggesting alternatives 1. active learning framework with variables - failure of following dialogue - number of such history context seen - confidence of alternatives?}
+features from Raveesh Thesis 
+ - utterance similarity - cosine distance 
+ - disconfirmation - no/not presenece
+ - corrections arguments for API call changed (is it the same API call?)
+ - change of topic
+      - expected API call in previous turn
+      - number of changed arguments
+      - cosine distance from previous API call
+\todo{explain unweighted average recall}
 
