@@ -301,19 +301,21 @@ We argue that DB calls are much more natural and easy to obtain annotations both
 
 \subsection{Work in progress}\label{sec:wip}
 
-We are still working on a~end-to-end system which can be optimized jointly.
-In contrast, with very recent papers our approach will need much less annotation and won't use dialogue state labels as in~\cite{wen_networkbased_2016}, but it will use DB calls as described earlier.
+We are currently working on a~end-to-end task-oriented system which can be optimized jointly.
+In contrast with very recent papers, our approach needs less annotations and doesn't use dialogue state labels as in~\cite{wen_networkbased_2016}, but it uses easier to obtain DB calls records~\cite{platek2016wochat}.
 
-A crucial problem of end-to-end statistical models for a dialogue system is that the dialogue agent performs latent actions which appear rather stochastically due to lack of training data.
-However, the latent actions follow strict logic.
+A crucial problem of end-to-end statistical models for a dialogue system is that the dialogue agent performs latent actions which appear rather stochastically due to lack of training data, but the latent actions follow strict logic.
+The challenge for end-to-end models is to learn such logic in purely data-driven approach.
 An example of such (partially) latent actions are calls to database.\footnote{Any action of an agent can be transformed to a~database call because the dialogue system may delegate the task through the database to other services which execute the actions. Typical example is weather information service.}
 If a system is supposed to query a~database for information it is a partially latent action because the system presents only~the results of the action to the~user.
-However, the user can not distinguish if the system is providing similar answer without accessing the database e.g.~choosing a~reasonable but incorrect answer based on the language model.
+However, the user without the access to system database is not able to distinguish if the system is providing a valid answer.
+The system for example may choose credible reply based based on its language model (see Figure~\ref{fig:encdec_lies}) which is plainly false.
 An example of completely latent action is if the~user ``{\it orders pizza}''.
-The system should access the database and create and entry to database based on which the order is inserted into the reservation system.
-However, the user typically only suppose that the system executed the correct action and in the ``{\it pizza order}`` example he or she happily waits at least 30 minutes for pizza delivery\footnote{If the dialogue system misunderstood the user and did not order the pizza, the user won't provide any feedback which the system is able to process}.
+The system should insert the order into the reservation system represented in DB.
+However, the user can only hope that the system executed the correct action and has to continue in the conversation. 
+In the ``{\it pizza order}`` example, he or she happily waits at least 30 minutes for pizza delivery and if the dialogue system misunderstood the user and did not order the pizza, the user won't provide any feedback from which the system is able to learn.
 As a result, if one want to train a dialogue system one need to design objective function and data representations which force the latent action correspond to system replies, so the logic of the latent actions is maintained.
-Unfortunately, the feedback that a DB call does not correspond to the system reply is often not available as seen in our ``{\it pizza}'' example.
+Unfortunately, the feedback that a DB call does not correspond to the system reply is often not available as demonstrated in our ``{\it pizza}'' example.
 
 \begin{figure*}[htb]
     \centering
@@ -322,14 +324,16 @@ Unfortunately, the feedback that a DB call does not correspond to the system rep
 \label{fig:dai_gen}
 \end{figure*}
 
-A common approach is to use dialog state tracking for updating the dialogue state represented in a~discrete form such as dialogue state items (see Figure~\ref{fig:dai_gen}) and a dialogue policy which executes operations on KB and produces a~plan for NLG what to say which is compatible with KB actions~\cite{dusek_sequence2sequence_2016,young2010hidden}.
-An~alternative approach is presented in a~simplistic form in~\cite{wen_networkbased_2016} where a KB operation is executed or skipped based on the dialogue state but the NLG uses only the dialogue state and the result of KB operation to generate a~reply.
-We propose to predict directly which KB operation to use from the~hidden state $h_t$ of neural network and later predict the system reply.
+Typically, the dialog manager (DM) updates the dialogue state, presents the results of DB call and suggest NLG plan all represented in a~discrete format such as dialogue state items (DAIs) (see Figure~\ref{fig:dai_gen}).
+The policy DM executes operations on KB and produces a~NLG plan  which is compatible with KB actions~\cite{dusek_sequence2sequence_2016,young2010hidden}.
+An~alternative approach is presented in a~simplistic form in~\cite{wen_networkbased_2016} where a KB operation is executed or skipped based on the dialogue state also represented by DAIs but the NLG uses only the dialogue state and the result of KB operation to generate a~reply.
+We propose to predict directly which KB operation to use from the~hidden state $h_t$ of neural network which uses distributed representation and later predict the system reply.
+The advantage is that one does not need to handcraft additional layer for tracking the dialogue state.
 The reply will be predicted conditioned on the selected KB call's result and the same state $h_t$ state and will be generated in word by word manner.
 Such model needs to be trained so the model replies match the model's KB calls, but it allows flexibility how to communicate about the KB calls and their results.
 We conditioned the reply based on the KB call and not vice versa, because we want the system to describe which action is actually used. 
 
-Experiments with our first model showed that we have too few data and our model is too complicated to learn anything meaningful on DSTC2 dataset.
+Experiments with our first model showed that we have too few data and our model is too complicated to learn anything meaningful on the~DSTC2 dataset.
 In the experiment, we used the DSTC2 dataset and we tried to mimic the system replies given the dialogue history and the DB of restaurants for the DSTC2 restaurant domain.
 We design a heuristic function to create annotations in form of DB calls to simulate human annotation as described in~\cite{platek2016wochat}.
 We used the DB calls as input features because they showed promising results in~\cite{platek_recurrent_2016} for DST.
@@ -337,7 +341,7 @@ Unfortunately, our model was not able to learn correlation between dialogue hist
 It produces only sophisticated lies mimicking the systems replies and randomly choosing facts from database.
 Consider example from Figure~\ref{fig:encdec_lies} where both plain encoder-decoder and our propose model decoded the same incorrect reply.
 Our informal experiments showed that encoder-decoder is able to produce the exact template on DSTC2 dataset in over than 30 \% cases without checking the right named entities.
-Additionally on small manually checked subset of 100 replies from DSTC2 test set, we find out that over 73 \% templates are convenient but they differ only in incorrectly used named entities such telephone number as demonstrated in~Figure~\ref{fig:encdec_lies}.
+Additionally, we find out that over 73 \% templates are convenient but they differ only in incorrectly used named entities such telephone number as demonstrated in~Figure~\ref{fig:encdec_lies} on small manually checked subset of 100 replies from DSTC2 test set.
 \begin{figure}[!ht]
     {\bf input:} {\it anatolia serves turkish food in the moderate price range what is the phone number and address} \\
     {\bf decoded:} {\it The phone number of {\bf meghna} is {\bf 01223 727410} . EOS} \\
@@ -379,9 +383,10 @@ We are especially interested in improving the semantic compatibility of the answ
 \section{Future work}\label{sec:future}
 
 Most of the current research focus on reducing handcrafted components from the dialogue system architectures.
-A successful approach is to built an end-to-end system using neural networks which we introduced in~Section{sec:e2end} and proposed improvements in Section~\ref{sec:wip}. 
-However, the most popular approaches require a lot of data ideally annotated.
-We suggest that a system should collects annotations which are used for its retraining we aim at reducing both the expert work and annotated data needed for launching such agent.
+A successful approach is to built an end-to-end system using neural networks which we introduced in~Section~\ref{sec:e2end} and proposed improvements in Section~\ref{sec:wip}. 
+However, the most popular approaches require a lot of annotated data.
+We suggest that a system should collect annotations which are used for its retraining. 
+We aim at reducing both the expert work and annotated data needed for launching a narrow domain task oriented dialogue system.
 Next, we will not only try to optimize action selection process of a~dialogue system, but we will also attempt to learn new facts and thus perform more informed decisions.
 At the same time, such agent improves its performance by live interactions with users and the annotations may be helpful for adapting to a new domain.
 
