@@ -364,8 +364,10 @@ We are especially interested in improving the semantic compatibility of the answ
 \begin{figure*}[ht]
     \centering
     \includegraphics[width=1.0\linewidth]{e2end_dbclassifiers}
-    \caption{We are currently working on a binary classifiers model which only focus on selecting the right named entities for the reply. 
+    \caption{We are currently working on a binary classifiers model which only focus on selecting the right named entities for the reply from database table. 
     Each binary classifier predicts if the restaurant properties stored at corresponding row should be presented in the reply (see the grey column representing the binary decision of the classifier). 
+    The dialogue history is simply encoded into series of embeddings $x_1, x_2, x_T$ for each word.
+    The database is represented as set of rows.
     Note that the input words and the database entities are represented as embeddings which are trained. 
     The colours in the table represents the same embeddings used on different places.
     The row embeddings are combined embeddings of properties values where all property values are stored in one column.
