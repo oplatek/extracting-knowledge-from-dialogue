@@ -1,3 +1,7 @@
+## Online latest version
+
+- [Extracting knowledge version 1.0](https://github.com/oplatek/extracting-knowledge-from-dialogue/raw/master/tags/v1.0-extracting-knowledge-dialogue.pdf)
+
 # Thesis proposal - gitbook - DEPRECATED
 
 The goal of this thesis proposal is to review published work, work in progress and future plans.
