@@ -1,4 +1,4 @@
-# Thesis proposal
+# Thesis proposal - gitbook - DEPRECATED
 
 The goal of this thesis proposal is to review published work, work in progress and future plans.
 The review first introduces new research questions in the topic of "Extraction knowledge from spoken dialogue systems".
