@@ -21,6 +21,9 @@
 
 %%%%%% PLEASE USE THIS DECLARATION FOR YOUR COMMENTS %%%%%%%%
 
+% OD: this is needed for strike through
+\usepackage[normalem]{ulem}
+
 % OP - Ondrej Platek inline 
 \def\OP#1{{\color{purple}OP: \it #1}}
 \def\ODdel#1{\bgroup\markoverwith{\textcolor{purple}{\rule[0.5ex]{2pt}{1pt}}}\ULon{#1}}
@@ -29,6 +32,11 @@
 \definecolor{darkgreen}{rgb}{0.0, 0.5, 0.0}
 \def\OD#1{{\color{darkgreen}OD: \it #1}}
 \def\ODdel#1{\bgroup\markoverwith{\textcolor{darkgreen}{\rule[0.5ex]{2pt}{1pt}}}\ULon{#1}}
+
+% MV - Miroslav Vodolan
+\definecolor{darkblue}{rgb}{0.0, 0.20, 0.85}
+\def\MV#1{{\color{darkblue}MV: \it #1}}
+\def\MVdel#1{\bgroup\markoverwith{\textcolor{darkblue}{\rule[0.5ex]{2pt}{1pt}}}\ULon{#1}}
 
 
 \aclfinalcopy% Uncomment this line for the final submission
@@ -59,17 +67,17 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-Building a conversation agent is a demanding process which is typically simplified by using narrow fixed conversation domain.
-The most effective approaches either use a~very weak feedback and improve deployed dialogue system via reinforcement learning or use supervised learning and labeled data.
-This work build on the success of then methods above and focuses on designing the conversational agents which will be able to:
+Building a conversation agent is a demanding process which is typically simplified by a~using narrow and fixed conversation domain.
+The most effective approaches either use a~very weak feedback and improve a~deployed dialogue system via reinforcement learning or use supervised learning and labeled data.
+This work build on the success of the~methods above and focuses on designing conversational agents which will be able to:
 \begin{itemize}
     \item collect explicit annotation interactively during the dialogue,
-    \item enhancing the knowledge base of a system by new facts,
+    \item enhance the knowledge base of a system by new facts,
     \item learn to recognize explicit reward signals in conversations.
 \end{itemize}
-Consequently, such conversational system should:
+Consequently, such conversational systems should:
 \begin{itemize}
-    \item need smaller amount of data and annotation needed for its optimization,
+    \item need smaller amount of data and annotation needed for their optimization,
     \item self-improve based on the collected feedback.
 \end{itemize}
 \end{abstract}
@@ -77,31 +85,32 @@ Consequently, such conversational system should:
 \section{Introduction}
 \label{sec:introduction}
 
-The research of dialogue systems describes theories how interlocutors communicate, evaluates communication techniques for humans and artificial systems, and last but not least build the artificial conversational systems.
-Arguably, the most understood and commercial successful artificial systems are conversation agents playing role of expert in task oriented dialogue in narrow domain.
-Several research groups deployed such speech-to-speech dialogue system on different domains, for example:
+The research of dialogue systems describes theories on how interlocutors communicate, communication techniques for humans and artificial systems are evaluated, and last but not how experimental artificial conversational systems are built.
+Arguably, the most understood and commercial successful artificial systems are conversation agents playing the role of an expert in task oriented dialogue in a narrow domain.
+Several research groups deployed such speech-to-speech dialogue systems on different domains, for example:
 \begin{itemize}
-    \item Let's go system~\cite{raux_lets_2005} helped the participants of experiments book a flight ticket.
-    \item The Cambridge group repeatedly uses Cambridge restaurant domain to evaluate experiments on crowdsourced users where users search for a restaurant in Cambridge.
-    \item The work of~\cite{dusek_sequence2sequence_2016} and \cite{vejman_martin_development_2015} evaluates their system on Public Transformation domain in Prague and New York respectively on crowdsourced and also real users. 
+    \item Let's go system~\cite{raux_lets_2005} helped the participants of experiments book a flight ticket and it was also deployed in Pittsburgh during night hours.
+    \item The Cambridge group repeatedly uses Cambridge restaurant domain to evaluate experiments on crowd-sourced users where users search for a restaurant in Cambridge.
+    \item The work of~\cite{dusek_sequence2sequence_2016} and \cite{vejman_martin_development_2015} evaluates their system on public transformation domain in Prague and New York, respectively, with crowd-sourced and also real users. 
 \end{itemize}
-All the mentioned works conclude that action selection (the task of dialogue management) plays central role in leading a dialogue.
-However, the obvious differences between the domains and absence of widely accepted evaluation metrics for action selection do not allow comparison of the deployed techniques and algorithms.
+All the mentioned works conclude that action selection (the task of dialogue management) plays a~central role in leading a dialogue.
+However, the obvious differences between domains and the absence of widely accepted evaluation metrics for action selection do not allow a comparison of the deployed techniques and algorithms.
 
-The lack of comparable research was the reason for organizing dialogue state tracking challenge (DSTC)~\cite{dstcwilliams} which resulted in successful evaluation of many dialogue state trackers on the restaurant domain.
-Dialogue state tracking probabilistically represents user's goal in predefined formalism such as dialogue acts~\cite{dstcwilliams,henderson2014second,hendersonthird}.
-The distribution over slots and their values is updated as the conversation evolves.
-The~DST evaluates the quality of the distribution by easy to understand and widely accepted measures such as accuracy and L2 measure.\footnote{DSTC2 and DSTC3 challenges recommend using accuracy and L2 measures. In addition, one is advised not to evaluate the dialogue state trackers on the first turns where the dialogue state does not change.}
+The lack of comparable research was the reason for organizing the~dialogue state tracking challenge (DSTC)~\cite{dstcwilliams}, which resulted in successful evaluation of many dialogue state trackers on the restaurant domain.
+Dialogue state tracking represents the user's goal probabilistically within a predefined formalism such as dialogue acts~\cite{dstcwilliams,henderson2014second,hendersonthird}.
+A dialogue act is a~triple $(type, slot's type, slot's value)$ where type is {\it inform, confirm,...}, slot type is {\it food, area, ...} and values are for example {\it Chinese, west, ...}.
+The dialog state tracker updates distribution over slots and their values as the conversation evolves.
+The~DSTC evaluates the quality of the distribution by easy to understand and widely accepted measures such as accuracy and L2 measure.\footnote{DSTC2 and DSTC3 challenges recommend using accuracy and L2 measures. In addition, one is advised not to evaluate the dialogue state trackers on the first turns where the dialogue state does not change.}
 The improvements of dialogue state trackers enable more informed and thus better action selection which is the ultimate goal of a dialogue system.
 
 % Most of the dialogue state trackers submitted to DSTC1, DSTC2 and DSTC3 used supervised learning to estimate the probabilities of dialogue state for given history\footnote{With the notable exception of~\cite{zilka_incremental_2015} tracker which perform simple Bayesian update without any learning and still achieves competitive results.}
-The dialogue state is commonly defined by manually designed domain ontology.
-Thanks to the DST challenge success, where a handcrafted ontology was provided, it may seem easy to design such ontology\footnote{The Cambridge restaurant ontology had been polished over several years of research and it is actually rather simple.}.
-In general, we see the manually designed ontology as arbitrary, costly and also error prone process.
-Recently, it was shown by~\cite{wen_networkbased_2016} that the dialogue state annotations are the single annotations in additions to conversation transcriptions needed for training end-to-end system jointly, so it became even more important to specify high-quality DST labels by the domain ontology.
-In our recent work~\cite{platek2016wochat}, we proposed alternative annotations of dialogue history which we describe in~Section~\ref{sec:experiments}.
+The dialogue state is commonly defined by a~manually designed domain ontology.
+Thanks to the DSTC success, where a handcrafted ontology was provided, it may seem easy to design such an~ontology\footnote{The Cambridge restaurant ontology had been polished over several years of research and it is actually rather simple.}.
+However, we regard the manual onthology design as an arbitrary, costly and also error prone process.
+Recently, it was shown by~\cite{wen_networkbased_2016} that dialogue state annotations are the only annotations in addition to conversation transcriptions needed for training an~end-to-end system jointly, so it became even more important to specify high-quality DST labels by the domain ontology.
+In our recent work~\cite{platek2016wochat}, we proposed alternative annotations of dialogue history, which we describe in~Section~\ref{sec:experiments}.
 
-We draw another conclusion from the dialogue state challenge, that using n-best list from automatic speech recognition (ASR) helps just a little if compared with 1-best hypothesis even for ASR with high word error rates.
+We draw another conclusion from the dialogue state challenge: Using n-best lists from automatic speech recognition (ASR) helps just a little if compared with 1-best hypotheses even if ASR with high word error rates is in use.
 In addition, the recent advances in speech recognition reduced the WER even on far-field ASR drastically~\cite{peddinti_jhu_2015,zhang_highway_2016}.
 As a result, we observed that the focus of the research moved to text-to-text systems which can be easily integrated to speech to speech systems using a~one-best ASR and a~text-to-speech (TTS) modules.
 
@@ -112,43 +121,41 @@ We see the following research goals in the field of dialogue systems as the most
     \item Efficient exploiting knowledge gained from training a~single domain agent for extending its domain. 
 \end{enumerate}
 
+We propose a research direction which aims to tackle the first two problems, and if successful, it may also help to solve the~domain extension problem.
 
-We propose a research direction which aims to tackle the first two problems, and if successful, it may help to solve also extending the~domain of the agent.
-
-We review current state-of-the-art end-to-end dialogue system in Section~\ref{sec:e2end} in respect to our goals.
-In Section~\ref{sec:learn_feedback}, we summarize how a feedback is used for optimizing statistical models and how it is represented and extracted. 
-In Section~\ref{sec:experiments} we describe our results and we propose future work in~Section~\ref{sec:future}. 
-Ideally, our experiments will show that proposed models are able to learn from user feedback and the resulting dialogue system will be able to self-learn.
-Finally in Section~\ref{sec:discussion}, we review our work, discuss potential challenges and compare it to current research.
+We review current state-of-the-art end-to-end dialogue systems in Section~\ref{sec:e2end} with respect to our goals.
+In Section~\ref{sec:learn_feedback}, we summarize how feedback is used for optimizing statistical models and how it is represented and extracted. 
+In Section~\ref{sec:experiments} we describe our so far results, and we propose a plan of our future research in~Section~\ref{sec:future}. 
+Finally in Section~\ref{sec:discussion}, we review our approach, discuss potential challenges and compare it to current research.
 
 
 \section{End-to-End Conversational Agents}
 \label{sec:e2end}
 Building end-to-end conversation agents is a~new appealing approach for building conversation agents.
-It reduces the task of building text-to-text dialogue system to training a single statistical model and thus optimizes the response generation process jointly and avoids cumulating errors.
+It reduces the task of building a~text-to-text dialogue system to training a single statistical model and thus optimizes the response generation process jointly with language understanding and state tracking and avoids accumulating errors along the pipeline.
 
 Neural networks dominate the first attempts~\cite{williams2016end,bordes_learning_2016,weston2015endtoend_prereq} to build end-to-end conversational systems.
 Using neural networks is an obvious choice because various neural network models achieve state-of-the-art results for optimizing traditional components of a dialogue system:
 \begin{itemize}
-    \item language understanding (LU)~\cite{mairesse_spoken_2009} 
-    \item dialogue state tracking (DST)~\cite{williams_web-style_2014,henderson2014word,vodolan_hybrid_2015,platek_recurrent_2016}
-    \item natural language generation (NLG)~\cite{dusek_sequence2sequence_2016,wen_networkbased_2016}
-    \item feedback/reward prediction~\cite{su_learning_2015}
+    \item language understanding (LU) \cite{mairesse_spoken_2009} 
+    \item dialogue state tracking (DST) \cite{williams_web-style_2014,henderson2014word,vodolan_hybrid_2015,platek_recurrent_2016}
+    \item natural language generation (NLG) \cite{dusek_sequence2sequence_2016,wen_networkbased_2016}
+    \item feedback/reward prediction \cite{su_learning_2015}
 \end{itemize}
 Neural networks models not only achieve the best results in all the mentioned tasks but the models are relatively straightforward to combine and optimize jointly.
 The key to successfully training a neural network is to provide enough labeled data since the neural network typically learns a lot of unspecified structure and patterns.
 Luckily, neural networks capture structures of data easily so less features need to be handcrafted and more importantly a sequence of components can be replaced by a single statistical model.
-As consequence, the data for intermediate representation between the components does not to be provided for training the pipeline, but typically larger amount of the training examples is needed.
+As consequence, the data for intermediate representation between the components is not needed for training the pipeline, but typically a~larger amount of training examples is required.
 
 \subsection{Data annotation and loss function}
 \label{sub:data_annotation}
 
-Neural networks are commonly trained using supervised learning by maximizing directly the log likelihood of conditional distribution $ P(Y| X) $ where the parameters of the distribution are estimated from training samples $ (\hat{X}, \hat{Y}) $.
-The sequential problems e.g.\ dialogue conversation are formulated as a~problem of generating next reply $y_t$ given the history $h_t$.
-In the~case of dialogue system, the history is represented by a~sequence of the~previous system utterances and user responses $ y_1, x_1, y_2, \dot x_{t-1}, y_{t-1}, x_t $.
+Neural networks are commonly trained using supervised learning by maximizing directly the log likelihood of a conditional distribution $ P(Y| X) $ where the parameters of the distribution are estimated from training samples $ (\hat{X}, \hat{Y}) $.
+Sequential problems such as dialogue conversation are formulated as a~problem of generating the~next reply $y_t$ given the history $h_t$.
+In the~case of a~dialogue system, the history is represented by a~sequence of the~previous system utterances and user responses $ y_1, x_1, y_2, \dot x_{t-1}, y_{t-1}, x_t $.
 
-Similarly to Hidden Markov Models (HMMs)~\cite{huang_hidden_1990} models Recurrent Neural Networks (RNNs) deal with potentially unlimited history by introducing a latent state $s_t$.\footnote{Unlike HMMs do not track probabilities in the hidden states but only sufficient statistics.}
-Simple use of  RNNs~\cite{gers_learning_2000} for classification reminds the structure of HMMs for maximum likelihood estimation e.g.\ in ASR~\cite{huang_hidden_1990}, but RNNs model the observation probabilities discriminatively (see Figure~\ref{fig:encoder}).
+Similarly to Hidden Markov Models (HMMs)~\cite{huang_hidden_1990}, Recurrent Neural Networks (RNNs) deal with potentially unlimited history by introducing a latent state $s_t$.\footnote{Unlike HMMs, they do not track probabilities in the hidden states but only use sufficient statistics.}
+A~simple use of  RNNs~\cite{gers_learning_2000} for classification resembles the structure of HMMs for maximum likelihood estimation, e.g.\ , in ASR~\cite{huang_hidden_1990}, but RNNs model the observation probabilities discriminatively (see Figure~\ref{fig:encoder}).
 The probability of action $ y_t $ is computed based on parameters for updating previous state $s_{t-1}$ to new state $s_t$ based on observation $x_t$.
 
 \begin{figure}[htb]
@@ -160,24 +167,23 @@ The probability of action $ y_t $ is computed based on parameters for updating p
 \end{figure}
 
 In the work of~\cite{wen_networkbased_2016}, a neural end-to-end network model is trained for predicting a~next system reply from a dialogue history.
-The model is trained not only from dialogue conversation transcriptions and the domain DB but also it uses dialogue state annotations for decomposing the system into multiple components.
+The model is trained not only from dialogue conversation transcriptions and the domain DB, but it also uses dialogue state annotations.
+The annotations are used because the model trains a pipeline of two neural networks and the annotations are used as the data representation of the first network output and the input of the second neural network.
 Its dialogue history is expressed as $h_t = y_1, x_1, s_1, y_2, \dot x_{t-1}, y_{t-1}, s_{t-1}, x_t, s_t $ where $s_t$ is the~annotation of dialogue state slots and their values e.g.\ {\it (food=Chinese, price\_range=expensive, area=west)}. 
-The work optimizes the model using supervised learning by maximizing likelihood of next word in a reply using cross-entropy training.
+The work optimizes the model using supervised learning by maximizing the likelihood of the~next word in a reply using cross-entropy training.
 
-Note that the cross-entropy training is the most successful method how to train neural networks.
-However, maximizing likelihood of next word in response should not be the ultimate goal which conversational agents should achieve.
+Cross-entropy training is the most successful method of training neural networks; However, maximizing the likelihood of the next word in a~response should not be the ultimate goal which conversational agents should achieve.
 First, supervised approaches are limited by the~quality of the golden data.
-Second, the independence assumptions of generating next word from the hidden state are not true in dialogue.
-% Unfortunately, maximizing likelihood of the whole dialogue jointly is intractable because of data sparsity issues as the~number of possible sequences of replies in dialogue grows very fast for more and longer dialogues.
+Second, the independence assumptions of generating the~next word from the hidden state are not true in dialogue.
 Consequently, there is plenty of room for improvement in modeling dialogue by end-to-end models.
 
-\subsubsection*{Maximum likelihood: current state}\label{sub:maximum_likelihood}
-Training neural networks for dialogue from gold labels using cross entropy for supervised learning brings several challenges
+\subsubsection*{Maximum likelihood: the most popular approach}\label{sub:maximum_likelihood}
+Training neural networks for dialogue from gold labels using cross entropy for supervised learning brings several challenges:
 \begin{itemize}
-    \item The prediction of the~next decision using the sequence-to-sequence model~\cite{bahdanau_neural_2014,sutskever_sequence_2014} are conditionally independent given the sufficient statistics of the hidden state of the decoding RNN.
+    \item predictions of the~next decision using the sequence-to-sequence model~\cite{bahdanau_neural_2014,sutskever_sequence_2014} are conditionally independent given the sufficient statistics of the hidden state of the decoding RNN.
     \item Dialogue responses of the system are often ambiguous and multiple options are equally possible.
-        On the other hand, cross-entropy loss function models the same way uncertainty and ambiguity of data by allowing only one correct gold solution.
-        See Equation~\ref{eq:cross} where $p(x)$ is distribution approximated by distribution of samples over training data and updates of the neural networks need to be performed only as difference between predicted likelihood $-\log(q(x))$ and a~log one-hot distribution
+        On the other hand, cross-entropy loss function models uncertainty and ambiguity in data in the same way, allowing only one correct option.
+        In Equation~\ref{eq:cross}, $p(x)$ is a~distribution approximated by the~distribution of samples over training data and updates of the neural networks need to be performed only as difference between the predicted likelihood $-\log(q(x))$ and a~log one-hot distribution\footnote{One-hot distribution is a~categorical distribution where the single option is marked as gold and is assigned probability of one.}:
         \begin{equation}\label{eq:cross}
             H(p, q) = \sum_{x}{p(x) * (- \log q(x))}     
         \end{equation}
@@ -365,7 +371,7 @@ We blame mainly huge ambiguity in the data and not enough training examples in t
 We aim to solve the problem by simplifying the model and learn to predict each row of database directly, predicting for each row of the DB by a binary classifier if it will appear in the database call results. 
 The advantage is that such architecture allows for multiple possible results which are typical for user queries and it can be easily trained directly using supervised learning if we prepare annotations using simple heuristics or later to be fine-tuned with reinforcement learning.
 As a side effect, each dialogue history and corresponding system reply training example will be expanded using heuristic functions to many possible replies over possible DB call results.
-We expect that by explicitly modelling the data ambiguity the trained classifier will generalize better and finally learn to propagate constraints from history over database to results which will be semantically more accurate.
+We expect that by explicitly modeling the data ambiguity the trained classifier will generalize better and finally learn to propagate constraints from history over database to results which will be semantically more accurate.
 We are especially interested in improving the semantic compatibility of the answer which we measure based on the dialogue state annotation from DSTC2 data or DB calls in the dataset~\cite{platek2016wochat} as recall and accuracy.
 \begin{figure*}[ht]
     \centering
@@ -375,7 +381,7 @@ We are especially interested in improving the semantic compatibility of the answ
     The dialogue history is simply encoded into series of embeddings $x_1, x_2, x_T$ for each word.
     The database is represented as set of rows.
     Note that the input words and the database entities are represented as embeddings which are trained. 
-    The colours in the table represents the same embeddings used on different places.
+    The colors in the table represents the same embeddings used on different places.
     The row embeddings are combined embeddings of properties values where all property values are stored in one column.
     We found out that selecting the right template is quite easy task in comparison to providing the right entities to the template.
     }
@@ -440,7 +446,7 @@ In addition, we would like to compare it human judgement on portion of the data.
     \sys{A golden house is a Chinese restaurant in the city center} 
 
     \dots \\
-    \usr{Where is of the India house restaurant located?}
+    \usr{Where is the India house restaurant located?}
     \api{select restaurant.area where name="India house"}
     \sys{It is located in the west part of the city.}
     \caption{Dialogue example with latent calls to system's DB.}
@@ -526,45 +532,48 @@ Second, we will evaluate how accurately our system is able to detect that user i
 \section{Discussion}
 \label{sec:discussion}
 
-We see the emerging end-to-end systems~\cite{williams2016end,weston2015endtoend_prereq,wen_networkbased_2016} as big step forward to reducing expert effort needed in building dialogue systems.
+We see the emerging end-to-end systems~\cite{williams2016end,weston2015endtoend_prereq,wen_networkbased_2016} as a~big step forward to reducing expert effort needed in building dialogue systems.
 However, the human effort put into building even narrow domain task oriented system just shifted from precious expert work to more scalable crowd-source annotators effort~\cite{wen_networkbased_2016,serban_building_2015}.
 We present series of experiments which should study how such scalable approach is pushed even further by collecting annotation through interactions.
 In addition, the same methods can be used to extracting and updating knowledge from conversations which is almost unexplored direction how to extend dialogue system domain and knowledge.
 
 The inverse reinforcement learning (IRL) is well established research direction of reducing the need for labeled data~\cite{abbeel_apprenticeship_2004}.
-The work of~\cite{nouri_cultural_2012} uses successfully IRL for a toy task in cultural decision making in negotiations.
-More recently,~\cite{su2016active} described active reward learning using unsupervised neural network embeddings and Gaussian processes and managed greatly reduced the amount of data to deploy a system.
+The work of~\cite{nouri_cultural_2012} uses IRL successfully for a toy task in cultural decision making in negotiations.
+More recently,~\cite{su2016active} described active reward learning using unsupervised neural network embeddings and Gaussian processes and managed to greatly reduce the amount of data to deploy a system.
 The problem with active reward learning of particular architecture is that when the single neural network architecture deprecates the new system can use all the knowledge stored in the system parameters in a very limited way.
-Effectively, it means that only the same starting labeled data together with collected unlabeled data can be used for training new architectures. 
+Effectively, it means that only the same starting labeled data together with collected unlabeled data can be used for training new architectures.
 We see that collecting annotation have bigger benefit from longer point of view and additionally it is completely orthogonal to active reward learning.
 
-The topics of error detection and error recovery of dialogue systems has been described from several point of view, but we learned that most of experiments focused on ASR errors~\cite{skantze_error_2007}.
-The work of~\cite{meena_datadriven_2016} analysed how to detect and recover also from SLU and DM errors.
+The topics of error detection and error recovery of dialogue systems has been described from several points of view, but we learned that most of the experiments are focused on ASR errors~\cite{skantze_error_2007}.
+The work of~\cite{meena_datadriven_2016} analyzed how to detect and recover also from SLU and DM errors.
 % \todo{Read and include work of~\cite{lopesspedial}.}
-However, the work primarily focused to discover errors offline and recommend designers which part of dialogues system needs more attention.
+However, the work of~\cite{meena_datadriven_2016} primarily focused to discover errors offline and recommend designers which part of dialogues system needs more attention.
 
-The work of~\cite{pappu_knowledge_2014} detects errors over multiple components and then employs post processing step which optimize the pipeline of components jointly.
+The work of~\cite{pappu_knowledge_2014} detects errors over multiple components and then employs post processing step which optimizes the components' pipeline jointly.
 This attitude is no longer necessary because all our components are optimized jointly.
-However, the work shows interesting insights what might be the most common errors and it also uses an~error discovery for knowledge acquisition.
+However, the work shows interesting insights on what might be the most common errors and it also uses an~error discovery for knowledge acquisition.
 The authors report promising results especially on acquiring missing named entities and enriching the system knowledge base.
 
 In our work, we want to follow up on their results, integrate our strategies to fully trainable system. 
-The most importantly, we want collect annotations for improving the system itself in addition to learning new facts to directly.
+The most importantly, we want collect annotations for improving the system itself in addition to learning new facts directly.
 To our knowledge no other work described a dialogue system which stores user reward signal in explicit form, aka annotations, for its later optimization.
 We would like to investigate its usefulness and compare it with current approaches such as active reward learning~\cite{su2016active} and zero-shot learning~\cite{vinyals_matching_2016}.\footnote{The zero-shot learning applies encoded prior information to extremely efficiently use few data samples provided in the user feedback.}
 
 
 \section{Conclusion}
 \label{sec:conclusion}
-We presented our work in progress, motivated our past and future experiments and discussed possible difficulties.
+We presented our work in progress, motivated our past and suggested possible future experiments and discussed their difficulties.
 Our experiments are mainly described as classification tasks where neural network statistical models will be used.
 We choose neural networks because they not only efficiently exploit labeled data but also also can be fine-tuned with reinforcement training.
-Our goal is to develop strategies which will help a conversational agent collect annotations and facts useful to any statistical inference algorithm.
+Our goal is to develop strategies which will help a conversational agent to collect annotations and facts useful to any statistical inference algorithm.
+
+We realize that we have proposed several research directions, which will be difficult to explore in depth despite their similarities.
+We plan to continue by exploring the directions in the order they has been presented, and we hope that working on the first problems will teach us what experiment should we explore next.
 
 \section*{Acknowledgments}
 This research was partly funded by the Ministry of Education, Youth and Sports of the Czech Republic under the grant agreement LK11221, core research funding, grant GAUK 1915/2015, and also partially supported by SVV project number 260 333. 
 We gratefully acknowledge the support of NVIDIA Corporation with the donation of the Tesla K40c GPU used for this research.
-Computational resources were provided by the CESNET LM2015042 and the CERIT Scientific Cloud LM2015085, provided under the programme ``Projects of Large Research, Development, and Innovations Infrastructures''.
+Computational resources were provided by the CESNET LM2015042 and the CERIT Scientific Cloud LM2015085, provided under the program ``Projects of Large Research, Development, and Innovations Infrastructures''.
 
 \bibliographystyle{acl2016}
 \bibliography{literature}
